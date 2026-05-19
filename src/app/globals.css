@@ -5,3 +5,7 @@
     scroll-behavior: smooth;
   }
 }
+
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}

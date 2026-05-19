@@ -1,14 +1,19 @@
 import { notFound } from "next/navigation"
 import { gurus } from "@/lib/gurus-data"
 import { places } from "@/lib/places-data"
-import Link from "next/link"
+import { Link } from "@/i18n/navigation"
+import { getTranslations } from "next-intl/server"
+import { routing } from "@/i18n/routing"
 import type { Metadata } from "next"
+import LanguageSwitcher from "@/components/LanguageSwitcher"
 
 export async function generateStaticParams() {
-  return gurus.map((g) => ({ slug: g.slug }))
+  return routing.locales.flatMap(locale =>
+    gurus.map(g => ({ locale, slug: g.slug }))
+  )
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string; locale: string }> }): Promise<Metadata> {
   const { slug } = await params
   const guru = gurus.find((g) => g.slug === slug)
   if (!guru) return {}
@@ -18,10 +23,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 }
 
-export default async function GuruPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
+export default async function GuruPage({ params }: { params: Promise<{ slug: string; locale: string }> }) {
+  const { slug, locale } = await params
   const guru = gurus.find((g) => g.slug === slug)
   if (!guru) notFound()
+
+  const t = await getTranslations({ locale, namespace: 'guru' })
+  const tNav = await getTranslations({ locale, namespace: 'nav' })
 
   return (
     <div className={`min-h-screen ${guru.theme.bg}`}>
@@ -30,9 +38,12 @@ export default async function GuruPage({ params }: { params: Promise<{ slug: str
           <span>{guru.icon}</span>
           <span className="text-sm">{guru.name}</span>
         </span>
-        <Link href="/" className="bg-white/20 hover:bg-white/30 transition-colors px-3 py-1.5 rounded-lg text-sm font-medium">
-          ← Back to SacredReach
-        </Link>
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher />
+          <Link href="/" className="bg-white/20 hover:bg-white/30 transition-colors px-3 py-1.5 rounded-lg text-sm font-medium">
+            {tNav('back')}
+          </Link>
+        </div>
       </nav>
 
       <main className="max-w-4xl mx-auto px-4 py-10">
@@ -44,18 +55,18 @@ export default async function GuruPage({ params }: { params: Promise<{ slug: str
         </div>
 
         <div className="bg-white rounded-2xl p-6 shadow-sm mb-6">
-          <h2 className="font-bold text-stone-800 mb-3">Life &amp; Legacy</h2>
+          <h2 className="font-bold text-stone-800 mb-3">{t('life_legacy')}</h2>
           <p className="text-stone-600 leading-relaxed">{guru.bio}</p>
         </div>
 
         <div className="bg-white rounded-2xl p-6 shadow-sm mb-6">
-          <h2 className="font-bold text-stone-800 mb-3">Core Teaching</h2>
+          <h2 className="font-bold text-stone-800 mb-3">{t('core_teaching')}</h2>
           <blockquote className="border-l-4 border-stone-300 pl-4 italic text-stone-600">{guru.coreTeaching}</blockquote>
         </div>
 
         {guru.keyWorks.length > 0 && (
           <div className="bg-white rounded-2xl p-6 shadow-sm mb-6">
-            <h2 className="font-bold text-stone-800 mb-3">Key Works &amp; Teachings</h2>
+            <h2 className="font-bold text-stone-800 mb-3">{t('key_works')}</h2>
             <ul className="space-y-1">
               {guru.keyWorks.map(w => <li key={w} className="text-stone-600 text-sm flex items-center gap-2"><span>📖</span>{w}</li>)}
             </ul>
@@ -64,7 +75,7 @@ export default async function GuruPage({ params }: { params: Promise<{ slug: str
 
         {guru.associatedPlaces.length > 0 && (
           <div className="bg-white rounded-2xl p-6 shadow-sm mb-6">
-            <h2 className="font-bold text-stone-800 mb-4">Perform a Ritual at Their Sacred Place</h2>
+            <h2 className="font-bold text-stone-800 mb-4">{t('ritual_places')}</h2>
             <div className="space-y-3">
               {guru.associatedPlaces.map(ap => {
                 const placeData = places.find(p => p.slug === ap.slug)
@@ -72,7 +83,11 @@ export default async function GuruPage({ params }: { params: Promise<{ slug: str
                   <Link key={ap.slug} href={`/place/${ap.slug}`} className="flex items-center justify-between bg-stone-50 hover:bg-stone-100 border border-stone-200 rounded-xl p-4 transition-all group">
                     <div>
                       <p className="font-semibold text-stone-800 group-hover:text-stone-900">{ap.name}</p>
-                      {placeData && <p className="text-xs text-stone-400 mt-0.5">From ${Math.min(...placeData.rituals.map(r => r.price))} · {placeData.rituals.length} rituals available</p>}
+                      {placeData && (
+                        <p className="text-xs text-stone-400 mt-0.5">
+                          From ${Math.min(...placeData.rituals.map(r => r.price))} · {t('rituals_available', { count: placeData.rituals.length })}
+                        </p>
+                      )}
                     </div>
                     <span className="text-stone-400 group-hover:translate-x-1 transition-transform">→</span>
                   </Link>
@@ -83,7 +98,7 @@ export default async function GuruPage({ params }: { params: Promise<{ slug: str
         )}
 
         <div className="flex flex-wrap gap-2 justify-center">
-          {guru.tags.map(t => <span key={t} className="text-xs bg-stone-100 text-stone-500 px-2 py-1 rounded-full">#{t}</span>)}
+          {guru.tags.map(tag => <span key={tag} className="text-xs bg-stone-100 text-stone-500 px-2 py-1 rounded-full">#{tag}</span>)}
         </div>
       </main>
 

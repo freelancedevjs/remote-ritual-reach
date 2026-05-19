@@ -1,12 +1,15 @@
 "use client"
 import { useState } from "react"
-import Link from "next/link"
+import { useTranslations } from "next-intl"
+import { Link } from "@/i18n/navigation"
 import { places } from "@/lib/places-data"
 import { gurus } from "@/lib/gurus-data"
+import LanguageSwitcher from "@/components/LanguageSwitcher"
 
 const typeFilters = ["All", "temple", "gurdwara", "dargah", "church", "monastery", "ashram", "shrine", "samadhi"]
 
 export default function HomePage() {
+  const t = useTranslations()
   const [filter, setFilter] = useState("All")
   const [search, setSearch] = useState("")
 
@@ -16,7 +19,7 @@ export default function HomePage() {
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.primaryFigure.toLowerCase().includes(search.toLowerCase()) ||
       p.location.city.toLowerCase().includes(search.toLowerCase()) ||
-      p.tags.some(t => t.includes(search.toLowerCase()))
+      p.tags.some(tag => tag.includes(search.toLowerCase()))
     return matchType && matchSearch
   })
 
@@ -25,50 +28,56 @@ export default function HomePage() {
       {/* Hero */}
       <section className="bg-gradient-to-b from-stone-900 to-stone-800 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <p className="text-stone-400 text-xs font-semibold tracking-widest uppercase mb-3">SacredReach</p>
+          <div className="flex justify-end mb-4">
+            <LanguageSwitcher />
+          </div>
+          <p className="text-stone-400 text-xs font-semibold tracking-widest uppercase mb-3">{t('home.tagline')}</p>
           <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-5">
-            Your Faith Has<br /><span className="text-amber-400">No Distance</span>
+            {t('home.hero_title')}<br /><span className="text-amber-400">{t('home.hero_highlight')}</span>
           </h1>
           <p className="text-stone-300 text-lg max-w-2xl mx-auto mb-8">
-            Book rituals at any sacred place in the world — performed on your behalf by verified priests, pandits, khadims and monks, with video proof and blessed offerings shipped to you.
+            {t('home.hero_subtitle')}
           </p>
           <div className="flex flex-wrap gap-3 justify-center text-sm">
-            <span className="bg-stone-700 px-4 py-2 rounded-full">📹 Video proof guaranteed</span>
-            <span className="bg-stone-700 px-4 py-2 rounded-full">📦 Shipped worldwide</span>
-            <span className="bg-stone-700 px-4 py-2 rounded-full">✅ Verified officiants only</span>
-            <span className="bg-stone-700 px-4 py-2 rounded-full">🕊️ Every faith, every tradition</span>
+            <span className="bg-stone-700 px-4 py-2 rounded-full">📹 {t('home.badge_video')}</span>
+            <span className="bg-stone-700 px-4 py-2 rounded-full">📦 {t('home.badge_shipping')}</span>
+            <span className="bg-stone-700 px-4 py-2 rounded-full">✅ {t('home.badge_verified')}</span>
+            <span className="bg-stone-700 px-4 py-2 rounded-full">🕊️ {t('home.badge_faiths')}</span>
           </div>
         </div>
       </section>
 
       {/* How it works */}
       <section className="py-12 px-4 bg-white border-b border-stone-100">
-        <div className="max-w-4xl mx-auto grid md:grid-cols-4 gap-6">
-          {[
-            { n: "1", icon: "🔍", title: "Find Your Place", desc: "Search by name, deity, saint, or city" },
-            { n: "2", icon: "🙏", title: "Choose a Ritual", desc: "Select the specific ritual or offering" },
-            { n: "3", icon: "🎬", title: "We Perform It", desc: "Verified officiant performs in your name" },
-            { n: "4", icon: "📦", title: "You Receive Proof", desc: "Video + photos + blessed items shipped" },
-          ].map(s => (
-            <div key={s.n} className="text-center">
-              <div className="text-2xl mb-2">{s.icon}</div>
-              <h3 className="font-semibold text-stone-800 text-sm mb-1">{s.title}</h3>
-              <p className="text-stone-400 text-xs">{s.desc}</p>
-            </div>
-          ))}
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-xl font-bold text-stone-800 mb-6 text-center">{t('home.how_title')}</h2>
+          <div className="grid md:grid-cols-4 gap-6">
+            {[
+              { n: "1", icon: "🔍", title: t('home.step1_title'), desc: t('home.step1_desc') },
+              { n: "2", icon: "🙏", title: t('home.step2_title'), desc: t('home.step2_desc') },
+              { n: "3", icon: "🎬", title: t('home.step3_title'), desc: t('home.step3_desc') },
+              { n: "4", icon: "📦", title: t('home.step4_title'), desc: t('home.step4_desc') },
+            ].map(s => (
+              <div key={s.n} className="text-center">
+                <div className="text-2xl mb-2">{s.icon}</div>
+                <h3 className="font-semibold text-stone-800 text-sm mb-1">{s.title}</h3>
+                <p className="text-stone-400 text-xs">{s.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Places */}
       <section className="py-12 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold text-stone-800 mb-6">Sacred Places</h2>
+          <h2 className="text-2xl font-bold text-stone-800 mb-6">{t('home.places_title')}</h2>
 
           {/* Search */}
           <div className="flex flex-col md:flex-row gap-3 mb-6">
             <input
               type="text"
-              placeholder="Search by name, deity, saint, city..."
+              placeholder={t('home.search_placeholder')}
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="flex-1 border border-stone-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-stone-400 bg-white"
@@ -80,7 +89,7 @@ export default function HomePage() {
             {typeFilters.map(f => (
               <button key={f} onClick={() => setFilter(f)}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium capitalize transition-colors border ${filter === f ? "bg-stone-800 text-white border-stone-800" : "bg-white text-stone-600 border-stone-200 hover:border-stone-400"}`}>
-                {f}
+                {f === "All" ? t('home.filter_all') : f}
               </button>
             ))}
           </div>
@@ -101,7 +110,7 @@ export default function HomePage() {
                 <p className="text-stone-400 text-xs mb-3 line-clamp-2">{p.description.slice(0, 100)}...</p>
                 <div className="flex items-center justify-between">
                   <span className={`text-xs px-2 py-0.5 rounded-full capitalize font-medium ${p.theme.badge} ${p.theme.badgeText}`}>{p.type}</span>
-                  <span className="text-xs font-bold text-stone-700">From ${Math.min(...p.rituals.map(r => r.price))}</span>
+                  <span className="text-xs font-bold text-stone-700">{t('home.from_price', { price: Math.min(...p.rituals.map(r => r.price)) })}</span>
                 </div>
               </Link>
             ))}
@@ -110,7 +119,7 @@ export default function HomePage() {
           {filtered.length === 0 && (
             <div className="text-center py-16 text-stone-400">
               <p className="text-4xl mb-3">🔍</p>
-              <p>No places found for &quot;{search}&quot;. Try a different search.</p>
+              <p>{t('home.no_results', { search })}</p>
             </div>
           )}
         </div>
@@ -119,8 +128,8 @@ export default function HomePage() {
       {/* Gurus */}
       <section className="py-12 px-4 bg-white border-t border-stone-100">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold text-stone-800 mb-2">Spiritual Masters &amp; Gurus</h2>
-          <p className="text-stone-400 text-sm mb-6">Learn about the masters behind the sacred places. Each page is independent — their teachings, their places, their legacy.</p>
+          <h2 className="text-2xl font-bold text-stone-800 mb-2">{t('home.gurus_title')}</h2>
+          <p className="text-stone-400 text-sm mb-6">{t('home.gurus_subtitle')}</p>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {gurus.map(g => (
               <Link key={g.slug} href={`/guru/${g.slug}`}
@@ -144,22 +153,22 @@ export default function HomePage() {
       <section className="py-12 px-4 bg-stone-900 text-white">
         <div className="max-w-4xl mx-auto grid md:grid-cols-4 gap-6 text-center">
           {[
-            { icon: "✅", label: "Verified Officiants", desc: "Background-checked priests, pandits, khadims & monks" },
-            { icon: "📹", label: "Video Every Time", desc: "Your name visible. No video = full refund." },
-            { icon: "📦", label: "Global Shipping", desc: "Blessed items delivered in 10–21 days worldwide" },
-            { icon: "🌍", label: "40+ Countries", desc: "12,000+ rituals performed for diaspora families" },
-          ].map(t => (
-            <div key={t.label}>
-              <div className="text-3xl mb-2">{t.icon}</div>
-              <h3 className="font-semibold text-sm mb-1">{t.label}</h3>
-              <p className="text-stone-400 text-xs">{t.desc}</p>
+            { icon: "✅", label: t('home.trust_officiants'), desc: t('home.trust_officiants_desc') },
+            { icon: "📹", label: t('home.trust_video'), desc: t('home.trust_video_desc') },
+            { icon: "📦", label: t('home.trust_shipping'), desc: t('home.trust_shipping_desc') },
+            { icon: "🌍", label: t('home.trust_countries'), desc: t('home.trust_countries_desc') },
+          ].map(item => (
+            <div key={item.label}>
+              <div className="text-3xl mb-2">{item.icon}</div>
+              <h3 className="font-semibold text-sm mb-1">{item.label}</h3>
+              <p className="text-stone-400 text-xs">{item.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       <footer className="bg-stone-900 border-t border-stone-800 py-6 px-4 text-center">
-        <p className="text-stone-400 text-xs">© 2024 SacredReach · Every sacred place is its own independent universe · Serving devotees in 40+ countries</p>
+        <p className="text-stone-400 text-xs">© 2024 SacredReach · {t('home.footer_text')}</p>
       </footer>
     </main>
   )

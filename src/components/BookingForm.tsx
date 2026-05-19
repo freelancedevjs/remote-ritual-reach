@@ -1,5 +1,6 @@
 "use client"
 import { useState } from "react"
+import { useTranslations } from "next-intl"
 
 type Ritual = {
   id: string
@@ -20,13 +21,13 @@ type Props = {
 }
 
 export default function BookingForm({ rituals, placeName, accentClass, accentTextClass, badgeClass, badgeTextClass }: Props) {
+  const t = useTranslations('booking')
   const [selectedRitual, setSelectedRitual] = useState<Ritual | null>(null)
   const [prasadAdd, setPrasadAdd] = useState(false)
   const [priorityVideo, setPriorityVideo] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [form, setForm] = useState({ name: "", identifier: "", family: "", whatsapp: "", date: "" })
 
-  const identifierLabel = "Your gotra / father's name / village (optional)"
   const total = selectedRitual ? selectedRitual.price + (prasadAdd ? 15 : 0) + (priorityVideo ? 10 : 0) : 0
 
   const selectedBorderClass = `border-2 ${badgeClass} ${badgeTextClass}`
@@ -35,18 +36,18 @@ export default function BookingForm({ rituals, placeName, accentClass, accentTex
     return (
       <div className="bg-green-50 border-2 border-green-200 rounded-2xl p-8 text-center">
         <div className="text-5xl mb-4">🙏</div>
-        <h3 className="text-xl font-bold text-stone-800 mb-2">Booking Received!</h3>
-        <p className="text-stone-600 mb-4">Your ritual at <strong>{placeName}</strong> has been booked.<br />A confirmation will be sent to your WhatsApp within 2 hours.</p>
+        <h3 className="text-xl font-bold text-stone-800 mb-2">{t('success_title')}</h3>
+        <p className="text-stone-600 mb-4">{t('success_subtitle', { place: placeName })}</p>
         <div className="bg-white rounded-xl p-4 text-left max-w-sm mx-auto mb-6">
-          <p className="text-sm text-stone-600"><span className="font-medium">Ritual:</span> {selectedRitual?.name}</p>
-          <p className="text-sm text-stone-600"><span className="font-medium">Name:</span> {form.name}</p>
-          <p className="text-sm text-stone-600"><span className="font-medium">Date:</span> {form.date}</p>
-          <p className="text-sm font-bold text-stone-800 mt-2">Total: ${total}</p>
+          <p className="text-sm text-stone-600"><span className="font-medium">{t('ritual_label')}:</span> {selectedRitual?.name}</p>
+          <p className="text-sm text-stone-600"><span className="font-medium">{t('name_label')}:</span> {form.name}</p>
+          <p className="text-sm text-stone-600"><span className="font-medium">{t('date_label')}:</span> {form.date}</p>
+          <p className="text-sm font-bold text-stone-800 mt-2">{t('total_label')}: ${total}</p>
         </div>
         <div className="flex justify-center gap-2 flex-wrap text-sm text-stone-500">
-          <span>✅ Priest will be assigned within 24h</span>
+          <span>✅ {t('success_note1')}</span>
           <span>•</span>
-          <span>📹 Video within 24h of ritual</span>
+          <span>📹 {t('success_note2')}</span>
         </div>
       </div>
     )
@@ -63,7 +64,7 @@ export default function BookingForm({ rituals, placeName, accentClass, accentTex
               <h3 className="font-semibold text-stone-800 text-sm">{r.name}</h3>
               <span className="font-bold text-stone-700 text-sm">${r.price}</span>
             </div>
-            <p className="text-stone-400 text-xs mb-2">Duration: {r.duration}</p>
+            <p className="text-stone-400 text-xs mb-2">{t('duration')}: {r.duration}</p>
             <ul className="space-y-0.5">
               {r.includes.map(i => <li key={i} className="text-xs text-stone-500 flex items-start gap-1"><span className="text-green-500 mt-0.5">✓</span>{i}</li>)}
             </ul>
@@ -73,33 +74,33 @@ export default function BookingForm({ rituals, placeName, accentClass, accentTex
 
       {selectedRitual && (
         <div className="bg-white border border-stone-200 rounded-2xl p-6 mt-4">
-          <h3 className="font-bold text-stone-800 mb-4">Your Details</h3>
+          <h3 className="font-bold text-stone-800 mb-4">{t('your_details')}</h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">Your Full Name *</label>
+              <label className="block text-sm font-medium text-stone-700 mb-1">{t('full_name')} *</label>
               <input type="text" required value={form.name} onChange={e => setForm({...form, name: e.target.value})}
                 className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-stone-400"
-                placeholder="As you want it read in the ritual" />
+                placeholder={t('full_name_placeholder')} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">{identifierLabel}</label>
+              <label className="block text-sm font-medium text-stone-700 mb-1">{t('identifier')}</label>
               <input type="text" value={form.identifier} onChange={e => setForm({...form, identifier: e.target.value})}
                 className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-stone-400" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">Family Members to Include (optional)</label>
+              <label className="block text-sm font-medium text-stone-700 mb-1">{t('family')}</label>
               <input type="text" value={form.family} onChange={e => setForm({...form, family: e.target.value})}
                 className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-stone-400"
-                placeholder="e.g. Spouse name, children names" />
+                placeholder={t('family_placeholder')} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">WhatsApp Number * (for video delivery)</label>
+              <label className="block text-sm font-medium text-stone-700 mb-1">{t('whatsapp')} *</label>
               <input type="tel" required value={form.whatsapp} onChange={e => setForm({...form, whatsapp: e.target.value})}
                 className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-stone-400"
-                placeholder="+1 555 000 0000" />
+                placeholder={t('whatsapp_placeholder')} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">Preferred Date *</label>
+              <label className="block text-sm font-medium text-stone-700 mb-1">{t('date')} *</label>
               <input type="date" required value={form.date} onChange={e => setForm({...form, date: e.target.value})}
                 className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-stone-400"
                 min={new Date().toISOString().split("T")[0]} />
@@ -107,19 +108,19 @@ export default function BookingForm({ rituals, placeName, accentClass, accentTex
 
             {/* Add-ons */}
             <div className="border-t pt-4">
-              <p className="text-sm font-medium text-stone-700 mb-3">Add-ons</p>
+              <p className="text-sm font-medium text-stone-700 mb-3">{t('addons')}</p>
               <label className="flex items-start gap-3 cursor-pointer mb-3">
                 <input type="checkbox" checked={prasadAdd} onChange={e => setPrasadAdd(e.target.checked)} className="mt-1" />
                 <div>
-                  <span className="text-sm font-medium text-stone-700">📦 Prasad International Shipping (+$15)</span>
-                  <p className="text-xs text-stone-400">Blessed items shipped to your address worldwide. 10–21 days.</p>
+                  <span className="text-sm font-medium text-stone-700">📦 {t('prasad_label')}</span>
+                  <p className="text-xs text-stone-400">{t('prasad_desc')}</p>
                 </div>
               </label>
               <label className="flex items-start gap-3 cursor-pointer">
                 <input type="checkbox" checked={priorityVideo} onChange={e => setPriorityVideo(e.target.checked)} className="mt-1" />
                 <div>
-                  <span className="text-sm font-medium text-stone-700">🎥 Priority Video Delivery (+$10)</span>
-                  <p className="text-xs text-stone-400">Edited HD video with your name overlay, delivered within 4 hours.</p>
+                  <span className="text-sm font-medium text-stone-700">🎥 {t('priority_video_label')}</span>
+                  <p className="text-xs text-stone-400">{t('priority_video_desc')}</p>
                 </div>
               </label>
             </div>
@@ -127,16 +128,16 @@ export default function BookingForm({ rituals, placeName, accentClass, accentTex
             {/* Total + submit */}
             <div className="border-t pt-4 flex items-center justify-between">
               <div>
-                <p className="text-sm text-stone-500">Total</p>
+                <p className="text-sm text-stone-500">{t('total')}</p>
                 <p className="text-2xl font-bold text-stone-800">${total}</p>
               </div>
               <button
                 onClick={() => { if (form.name && form.whatsapp && form.date) setSubmitted(true) }}
                 className={`${accentTextClass} font-semibold px-6 py-3 rounded-xl ${accentClass} transition-colors hover:opacity-90`}>
-                Confirm Booking →
+                {t('confirm_button')}
               </button>
             </div>
-            <p className="text-xs text-stone-400">* Fields required. Payment collected after priest assignment confirmation.</p>
+            <p className="text-xs text-stone-400">{t('required_note')}</p>
           </div>
         </div>
       )}
