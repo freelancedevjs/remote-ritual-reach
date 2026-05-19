@@ -1,27 +1,42 @@
 "use client"
 import { useState } from "react"
 
-type Ritual = { id: string; name: string; price: number; duration: string; includes: string[] }
+type Ritual = {
+  id: string
+  name: string
+  description: string
+  price: number
+  duration: string
+  includes: string[]
+}
 
-export default function BookingForm({ rituals, templeName, faith }: { rituals: Ritual[]; templeName: string; faith: "hindu" | "dargah" | "sikh" | "church" }) {
+type Props = {
+  rituals: Ritual[]
+  placeName: string
+  accentClass: string
+  accentTextClass: string
+  badgeClass: string
+  badgeTextClass: string
+}
+
+export default function BookingForm({ rituals, placeName, accentClass, accentTextClass, badgeClass, badgeTextClass }: Props) {
   const [selectedRitual, setSelectedRitual] = useState<Ritual | null>(null)
   const [prasadAdd, setPrasadAdd] = useState(false)
   const [priorityVideo, setPriorityVideo] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [form, setForm] = useState({ name: "", identifier: "", family: "", whatsapp: "", date: "" })
 
-  const identifierLabel = faith === "hindu" ? "Gotra (or leave blank for Kashyap)" : faith === "dargah" ? "Father's name (for dua)" : faith === "sikh" ? "Village/hometown (optional)" : "Parish/hometown (optional)"
+  const identifierLabel = "Your gotra / father's name / village (optional)"
   const total = selectedRitual ? selectedRitual.price + (prasadAdd ? 15 : 0) + (priorityVideo ? 10 : 0) : 0
 
-  const btnClass = { hindu: "bg-orange-600 hover:bg-orange-700", dargah: "bg-green-700 hover:bg-green-800", sikh: "bg-blue-700 hover:bg-blue-800", church: "bg-sky-700 hover:bg-sky-800" }[faith]
-  const selectedBorder = { hindu: "border-orange-500 bg-orange-50", dargah: "border-green-500 bg-green-50", sikh: "border-blue-500 bg-blue-50", church: "border-sky-500 bg-sky-50" }[faith]
+  const selectedBorderClass = `border-2 ${badgeClass} ${badgeTextClass}`
 
   if (submitted) {
     return (
       <div className="bg-green-50 border-2 border-green-200 rounded-2xl p-8 text-center">
         <div className="text-5xl mb-4">🙏</div>
         <h3 className="text-xl font-bold text-stone-800 mb-2">Booking Received!</h3>
-        <p className="text-stone-600 mb-4">Your ritual at <strong>{templeName}</strong> has been booked.<br />A confirmation will be sent to your WhatsApp within 2 hours.</p>
+        <p className="text-stone-600 mb-4">Your ritual at <strong>{placeName}</strong> has been booked.<br />A confirmation will be sent to your WhatsApp within 2 hours.</p>
         <div className="bg-white rounded-xl p-4 text-left max-w-sm mx-auto mb-6">
           <p className="text-sm text-stone-600"><span className="font-medium">Ritual:</span> {selectedRitual?.name}</p>
           <p className="text-sm text-stone-600"><span className="font-medium">Name:</span> {form.name}</p>
@@ -43,7 +58,7 @@ export default function BookingForm({ rituals, templeName, faith }: { rituals: R
       <div className="grid md:grid-cols-2 gap-4">
         {rituals.map(r => (
           <button key={r.id} onClick={() => setSelectedRitual(r)}
-            className={`text-left rounded-xl border-2 p-4 transition-all ${selectedRitual?.id === r.id ? selectedBorder : "border-stone-200 bg-white hover:border-stone-300"}`}>
+            className={`text-left rounded-xl border-2 p-4 transition-all ${selectedRitual?.id === r.id ? selectedBorderClass : "border-stone-200 bg-white hover:border-stone-300"}`}>
             <div className="flex justify-between items-start mb-2">
               <h3 className="font-semibold text-stone-800 text-sm">{r.name}</h3>
               <span className="font-bold text-stone-700 text-sm">${r.price}</span>
@@ -63,30 +78,30 @@ export default function BookingForm({ rituals, templeName, faith }: { rituals: R
             <div>
               <label className="block text-sm font-medium text-stone-700 mb-1">Your Full Name *</label>
               <input type="text" required value={form.name} onChange={e => setForm({...form, name: e.target.value})}
-                className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-orange-400"
+                className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-stone-400"
                 placeholder="As you want it read in the ritual" />
             </div>
             <div>
               <label className="block text-sm font-medium text-stone-700 mb-1">{identifierLabel}</label>
               <input type="text" value={form.identifier} onChange={e => setForm({...form, identifier: e.target.value})}
-                className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-orange-400" />
+                className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-stone-400" />
             </div>
             <div>
               <label className="block text-sm font-medium text-stone-700 mb-1">Family Members to Include (optional)</label>
               <input type="text" value={form.family} onChange={e => setForm({...form, family: e.target.value})}
-                className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-orange-400"
+                className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-stone-400"
                 placeholder="e.g. Spouse name, children names" />
             </div>
             <div>
               <label className="block text-sm font-medium text-stone-700 mb-1">WhatsApp Number * (for video delivery)</label>
               <input type="tel" required value={form.whatsapp} onChange={e => setForm({...form, whatsapp: e.target.value})}
-                className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-orange-400"
+                className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-stone-400"
                 placeholder="+1 555 000 0000" />
             </div>
             <div>
               <label className="block text-sm font-medium text-stone-700 mb-1">Preferred Date *</label>
               <input type="date" required value={form.date} onChange={e => setForm({...form, date: e.target.value})}
-                className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-orange-400"
+                className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-stone-400"
                 min={new Date().toISOString().split("T")[0]} />
             </div>
 
@@ -115,8 +130,9 @@ export default function BookingForm({ rituals, templeName, faith }: { rituals: R
                 <p className="text-sm text-stone-500">Total</p>
                 <p className="text-2xl font-bold text-stone-800">${total}</p>
               </div>
-              <button onClick={() => { if (form.name && form.whatsapp && form.date) setSubmitted(true) }}
-                className={`text-white font-semibold px-6 py-3 rounded-xl ${btnClass} transition-colors`}>
+              <button
+                onClick={() => { if (form.name && form.whatsapp && form.date) setSubmitted(true) }}
+                className={`${accentTextClass} font-semibold px-6 py-3 rounded-xl ${accentClass} transition-colors hover:opacity-90`}>
                 Confirm Booking →
               </button>
             </div>
