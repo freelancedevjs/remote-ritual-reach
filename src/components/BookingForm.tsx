@@ -8,6 +8,7 @@ type Ritual = {
   price: number
   duration: string
   includes: string[]
+  livestream?: boolean
 }
 
 type Props = {
@@ -26,27 +27,30 @@ export default function BookingForm({ rituals, placeName, accentClass, accentTex
   const [submitted, setSubmitted] = useState(false)
   const [form, setForm] = useState({ name: "", identifier: "", family: "", whatsapp: "", date: "" })
 
-  const identifierLabel = "Your gotra / father's name / village (optional)"
   const total = selectedRitual ? selectedRitual.price + (prasadAdd ? 15 : 0) + (priorityVideo ? 10 : 0) : 0
-
-  const selectedBorderClass = `border-2 ${badgeClass} ${badgeTextClass}`
 
   if (submitted) {
     return (
-      <div className="bg-green-50 border-2 border-green-200 rounded-2xl p-8 text-center">
-        <div className="text-5xl mb-4">🙏</div>
-        <h3 className="text-xl font-bold text-stone-800 mb-2">Booking Received!</h3>
-        <p className="text-stone-600 mb-4">Your ritual at <strong>{placeName}</strong> has been booked.<br />A confirmation will be sent to your WhatsApp within 2 hours.</p>
-        <div className="bg-white rounded-xl p-4 text-left max-w-sm mx-auto mb-6">
-          <p className="text-sm text-stone-600"><span className="font-medium">Ritual:</span> {selectedRitual?.name}</p>
-          <p className="text-sm text-stone-600"><span className="font-medium">Name:</span> {form.name}</p>
-          <p className="text-sm text-stone-600"><span className="font-medium">Date:</span> {form.date}</p>
-          <p className="text-sm font-bold text-stone-800 mt-2">Total: ${total}</p>
+      <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-8 text-center">
+        <div className="text-6xl mb-5 animate-float inline-block">🙏</div>
+        <h3 className="font-display text-2xl font-bold text-stone-800 mb-2">Booking Received!</h3>
+        <p className="text-stone-500 mb-6 leading-relaxed">
+          Your ritual at <strong className="text-stone-700">{placeName}</strong> has been booked.<br />
+          A confirmation will reach your WhatsApp within 2 hours.
+        </p>
+        <div className="bg-white rounded-xl p-5 text-left max-w-sm mx-auto mb-6 border border-green-100 shadow-sm">
+          <div className="space-y-2">
+            <p className="text-sm text-stone-600"><span className="font-semibold text-stone-700">Ritual:</span> {selectedRitual?.name}</p>
+            <p className="text-sm text-stone-600"><span className="font-semibold text-stone-700">Name:</span> {form.name}</p>
+            <p className="text-sm text-stone-600"><span className="font-semibold text-stone-700">Date:</span> {form.date}</p>
+            <div className="border-t border-stone-100 pt-2 mt-2">
+              <p className="text-lg font-bold text-stone-800">Total: ${total}</p>
+            </div>
+          </div>
         </div>
-        <div className="flex justify-center gap-2 flex-wrap text-sm text-stone-500">
-          <span>✅ Priest will be assigned within 24h</span>
-          <span>•</span>
-          <span>📹 Video within 24h of ritual</span>
+        <div className="flex flex-wrap justify-center gap-3 text-xs text-stone-500">
+          <span className="bg-green-100 text-green-700 px-3 py-1.5 rounded-full font-medium">✅ Priest assigned within 24h</span>
+          <span className="bg-green-100 text-green-700 px-3 py-1.5 rounded-full font-medium">📹 Video within 24h of ritual</span>
         </div>
       </div>
     )
@@ -54,89 +58,168 @@ export default function BookingForm({ rituals, placeName, accentClass, accentTex
 
   return (
     <div className="space-y-4">
-      {/* Ritual selection */}
+      {/* Ritual selection grid */}
       <div className="grid md:grid-cols-2 gap-4">
-        {rituals.map(r => (
-          <button key={r.id} onClick={() => setSelectedRitual(r)}
-            className={`text-left rounded-xl border-2 p-4 transition-all ${selectedRitual?.id === r.id ? selectedBorderClass : "border-stone-200 bg-white hover:border-stone-300"}`}>
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="font-semibold text-stone-800 text-sm">{r.name}</h3>
-              <span className="font-bold text-stone-700 text-sm">${r.price}</span>
-            </div>
-            <p className="text-stone-400 text-xs mb-2">Duration: {r.duration}</p>
-            <ul className="space-y-0.5">
-              {r.includes.map(i => <li key={i} className="text-xs text-stone-500 flex items-start gap-1"><span className="text-green-500 mt-0.5">✓</span>{i}</li>)}
-            </ul>
-          </button>
-        ))}
+        {rituals.map(r => {
+          const isSelected = selectedRitual?.id === r.id
+          return (
+            <button
+              key={r.id}
+              onClick={() => setSelectedRitual(r)}
+              className={`text-left rounded-2xl border-2 p-5 transition-all duration-200 hover:shadow-md group ${
+                isSelected
+                  ? `${badgeClass} border-current shadow-md`
+                  : "border-stone-200 bg-white hover:border-stone-300 hover:bg-stone-50/50"
+              }`}
+            >
+              <div className="flex justify-between items-start mb-2">
+                <h3 className={`font-bold text-sm leading-snug ${isSelected ? badgeTextClass : "text-stone-800"}`}>
+                  {r.name}
+                </h3>
+                <span className={`font-display text-base font-bold flex-shrink-0 ml-3 ${isSelected ? badgeTextClass : "text-stone-700"}`}>
+                  ${r.price}
+                </span>
+              </div>
+              <p className={`text-xs mb-3 ${isSelected ? `${badgeTextClass} opacity-70` : "text-stone-400"}`}>
+                ⏱ {r.duration} {r.livestream && "· 📡 Livestream available"}
+              </p>
+              <ul className="space-y-1">
+                {r.includes.map(inc => (
+                  <li key={inc} className={`text-xs flex items-start gap-1.5 ${isSelected ? badgeTextClass : "text-stone-500"}`}>
+                    <span className="text-green-500 mt-0.5 flex-shrink-0">✓</span>
+                    <span>{inc}</span>
+                  </li>
+                ))}
+              </ul>
+              {isSelected && (
+                <div className={`mt-3 pt-3 border-t ${badgeTextClass} opacity-70 border-current/20 text-xs font-semibold`}>
+                  ✓ Selected
+                </div>
+              )}
+            </button>
+          )
+        })}
       </div>
 
+      {/* Details form */}
       {selectedRitual && (
-        <div className="bg-white border border-stone-200 rounded-2xl p-6 mt-4">
-          <h3 className="font-bold text-stone-800 mb-4">Your Details</h3>
+        <div className="bg-white border border-stone-200 rounded-2xl p-6 mt-2 shadow-sm">
+          <h3 className="font-display font-bold text-stone-800 mb-5 text-lg">Your Details</h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">Your Full Name *</label>
-              <input type="text" required value={form.name} onChange={e => setForm({...form, name: e.target.value})}
-                className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-stone-400"
-                placeholder="As you want it read in the ritual" />
+              <label className="block text-xs font-semibold text-stone-600 mb-1.5 uppercase tracking-wide">
+                Your Full Name *
+              </label>
+              <input
+                type="text"
+                required
+                value={form.name}
+                onChange={e => setForm({ ...form, name: e.target.value })}
+                className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/15 transition-all"
+                placeholder="As you want it read during the ritual"
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">{identifierLabel}</label>
-              <input type="text" value={form.identifier} onChange={e => setForm({...form, identifier: e.target.value})}
-                className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-stone-400" />
+              <label className="block text-xs font-semibold text-stone-600 mb-1.5 uppercase tracking-wide">
+                Gotra / Father&apos;s Name / Village (optional)
+              </label>
+              <input
+                type="text"
+                value={form.identifier}
+                onChange={e => setForm({ ...form, identifier: e.target.value })}
+                className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/15 transition-all"
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">Family Members to Include (optional)</label>
-              <input type="text" value={form.family} onChange={e => setForm({...form, family: e.target.value})}
-                className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-stone-400"
-                placeholder="e.g. Spouse name, children names" />
+              <label className="block text-xs font-semibold text-stone-600 mb-1.5 uppercase tracking-wide">
+                Family Members to Include (optional)
+              </label>
+              <input
+                type="text"
+                value={form.family}
+                onChange={e => setForm({ ...form, family: e.target.value })}
+                className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/15 transition-all"
+                placeholder="Spouse, children, parents…"
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">WhatsApp Number * (for video delivery)</label>
-              <input type="tel" required value={form.whatsapp} onChange={e => setForm({...form, whatsapp: e.target.value})}
-                className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-stone-400"
-                placeholder="+1 555 000 0000" />
+              <label className="block text-xs font-semibold text-stone-600 mb-1.5 uppercase tracking-wide">
+                WhatsApp Number * (for video delivery)
+              </label>
+              <input
+                type="tel"
+                required
+                value={form.whatsapp}
+                onChange={e => setForm({ ...form, whatsapp: e.target.value })}
+                className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/15 transition-all"
+                placeholder="+1 555 000 0000"
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">Preferred Date *</label>
-              <input type="date" required value={form.date} onChange={e => setForm({...form, date: e.target.value})}
-                className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-stone-400"
-                min={new Date().toISOString().split("T")[0]} />
+              <label className="block text-xs font-semibold text-stone-600 mb-1.5 uppercase tracking-wide">
+                Preferred Date *
+              </label>
+              <input
+                type="date"
+                required
+                value={form.date}
+                onChange={e => setForm({ ...form, date: e.target.value })}
+                className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/15 transition-all"
+                min={new Date().toISOString().split("T")[0]}
+              />
             </div>
 
             {/* Add-ons */}
-            <div className="border-t pt-4">
-              <p className="text-sm font-medium text-stone-700 mb-3">Add-ons</p>
-              <label className="flex items-start gap-3 cursor-pointer mb-3">
-                <input type="checkbox" checked={prasadAdd} onChange={e => setPrasadAdd(e.target.checked)} className="mt-1" />
-                <div>
-                  <span className="text-sm font-medium text-stone-700">📦 Prasad International Shipping (+$15)</span>
-                  <p className="text-xs text-stone-400">Blessed items shipped to your address worldwide. 10–21 days.</p>
-                </div>
-              </label>
-              <label className="flex items-start gap-3 cursor-pointer">
-                <input type="checkbox" checked={priorityVideo} onChange={e => setPriorityVideo(e.target.checked)} className="mt-1" />
-                <div>
-                  <span className="text-sm font-medium text-stone-700">🎥 Priority Video Delivery (+$10)</span>
-                  <p className="text-xs text-stone-400">Edited HD video with your name overlay, delivered within 4 hours.</p>
-                </div>
-              </label>
+            <div className="border border-stone-100 rounded-xl p-4 bg-stone-50">
+              <p className="text-xs font-bold text-stone-600 uppercase tracking-wide mb-3">Optional Add-ons</p>
+              <div className="space-y-3">
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={prasadAdd}
+                    onChange={e => setPrasadAdd(e.target.checked)}
+                    className="mt-0.5 w-4 h-4 accent-amber-500 cursor-pointer"
+                  />
+                  <div>
+                    <span className="text-sm font-semibold text-stone-700 group-hover:text-amber-700 transition-colors">
+                      📦 Prasad International Shipping
+                      <span className="text-amber-600 ml-1 font-bold">+$15</span>
+                    </span>
+                    <p className="text-xs text-stone-400 mt-0.5">Blessed items shipped to your address worldwide. 10–21 days.</p>
+                  </div>
+                </label>
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={priorityVideo}
+                    onChange={e => setPriorityVideo(e.target.checked)}
+                    className="mt-0.5 w-4 h-4 accent-amber-500 cursor-pointer"
+                  />
+                  <div>
+                    <span className="text-sm font-semibold text-stone-700 group-hover:text-amber-700 transition-colors">
+                      🎥 Priority HD Video Delivery
+                      <span className="text-amber-600 ml-1 font-bold">+$10</span>
+                    </span>
+                    <p className="text-xs text-stone-400 mt-0.5">Edited HD video with your name overlay, delivered within 4 hours.</p>
+                  </div>
+                </label>
+              </div>
             </div>
 
-            {/* Total + submit */}
-            <div className="border-t pt-4 flex items-center justify-between">
+            {/* Total + CTA */}
+            <div className="flex items-center justify-between pt-4 border-t border-stone-100">
               <div>
-                <p className="text-sm text-stone-500">Total</p>
-                <p className="text-2xl font-bold text-stone-800">${total}</p>
+                <p className="text-xs text-stone-400 uppercase tracking-wide">Total</p>
+                <p className="font-display text-3xl font-bold text-stone-800">${total}</p>
               </div>
               <button
                 onClick={() => { if (form.name && form.whatsapp && form.date) setSubmitted(true) }}
-                className={`${accentTextClass} font-semibold px-6 py-3 rounded-xl ${accentClass} transition-colors hover:opacity-90`}>
+                className={`${accentClass} ${accentTextClass} font-bold px-7 py-3.5 rounded-xl transition-all hover:opacity-90 hover:scale-105 active:scale-95 shadow-md text-sm`}
+              >
                 Confirm Booking →
               </button>
             </div>
-            <p className="text-xs text-stone-400">* Fields required. Payment collected after priest assignment confirmation.</p>
+            <p className="text-xs text-stone-400">* Required fields. Payment is collected after priest assignment confirmation.</p>
           </div>
         </div>
       )}
