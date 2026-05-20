@@ -2,16 +2,21 @@ import { notFound } from "next/navigation"
 import { places } from "@/lib/places-data"
 import BookingForm from "@/components/BookingForm"
 import ScrollReveal from "@/components/ScrollReveal"
-import Link from "next/link"
+import { Link } from "@/i18n/navigation"
+import { getTranslations } from "next-intl/server"
+import { routing } from "@/i18n/routing"
+import LanguageSwitcher from "@/components/LanguageSwitcher"
 import type { Metadata } from "next"
 
 export async function generateStaticParams() {
-  return places.map((p) => ({ slug: p.slug }))
+  return routing.locales.flatMap(locale =>
+    places.map(p => ({ locale, slug: p.slug }))
+  )
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string; locale: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const place = places.find((p) => p.slug === slug)
+  const place = places.find(p => p.slug === slug)
   if (!place) return {}
   return {
     title: `${place.name} — Remote Ritual Booking | SacredReach`,
@@ -40,37 +45,42 @@ function SacredMandala({ className = "" }: { className?: string }) {
   )
 }
 
-export default async function PlacePage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  const place = places.find((p) => p.slug === slug)
+export default async function PlacePage({ params }: { params: Promise<{ slug: string; locale: string }> }) {
+  const { slug, locale } = await params
+  const place = places.find(p => p.slug === slug)
   if (!place) notFound()
+
+  const t = await getTranslations({ locale, namespace: 'place' })
+  const tNav = await getTranslations({ locale, namespace: 'nav' })
 
   return (
     <div className={`min-h-screen ${place.theme.bg} overflow-x-hidden`}>
-      {/* Sticky nav */}
       <nav className={`${place.theme.nav} ${place.theme.navText} px-4 py-3.5 flex items-center justify-between sticky top-0 z-50 shadow-lg`}>
         <span className="font-display font-bold flex items-center gap-2 text-sm md:text-base">
           <span className="text-xl">{place.icon}</span>
-          <span className="truncate max-w-[200px] sm:max-w-none">{place.name}</span>
+          <span className="truncate max-w-[160px] sm:max-w-none">{place.name}</span>
         </span>
-        <Link
-          href="/"
-          className="bg-white/15 hover:bg-white/25 transition-colors px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide flex-shrink-0"
-        >
-          ← SacredReach
-        </Link>
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher />
+          <Link
+            href="/"
+            className="bg-white/15 hover:bg-white/25 transition-colors px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide flex-shrink-0"
+          >
+            {tNav('back')}
+          </Link>
+        </div>
       </nav>
 
-      {/* Hero header */}
+      {/* Hero */}
       <div className={`relative ${place.theme.nav} ${place.theme.navText} overflow-hidden`}>
         <div className="absolute inset-0 opacity-[0.06] pointer-events-none flex items-center justify-end pr-8">
-          <SacredMandala className="w-64 h-64 text-white animate-spin-slow" />
+          <SacredMandala className="w-72 h-72 text-white animate-spin-slow" />
         </div>
         <div className="relative z-10 max-w-5xl mx-auto px-4 py-12 md:py-16">
           <div className="flex items-start gap-4 mb-5">
             <span className="text-5xl md:text-6xl animate-float">{place.icon}</span>
             <div>
-              <span className={`inline-block text-xs font-bold px-3 py-1 rounded-full mb-3 bg-white/15 uppercase tracking-widest`}>
+              <span className="inline-block text-xs font-bold px-3 py-1 rounded-full mb-3 bg-white/15 uppercase tracking-widest">
                 {place.type} · {place.faith}
               </span>
               <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-2">
@@ -81,12 +91,10 @@ export default async function PlacePage({ params }: { params: Promise<{ slug: st
               </p>
             </div>
           </div>
-
-          {/* Auspicious days */}
           <div className="flex flex-wrap gap-2 mt-5">
             {place.auspiciousDays.map(d => (
               <span key={d} className="text-xs px-3 py-1.5 rounded-full font-medium bg-white/15 border border-white/20">
-                ✨ {d}
+                ✨ {t('auspicious')}: {d}
               </span>
             ))}
           </div>
@@ -118,10 +126,8 @@ export default async function PlacePage({ params }: { params: Promise<{ slug: st
 
         {/* Booking form */}
         <ScrollReveal className="mb-12">
-          <h2 className="font-display text-2xl md:text-3xl font-bold text-stone-800 mb-1">Choose a Ritual</h2>
-          <p className="text-stone-400 text-sm mb-6">
-            Select a ritual below — a verified officiant performs it in your name with video proof.
-          </p>
+          <h2 className="font-display text-2xl md:text-3xl font-bold text-stone-800 mb-1">{t('book_title')}</h2>
+          <p className="text-stone-400 text-sm mb-6">{t('book_subtitle')}</p>
           <BookingForm
             rituals={place.rituals}
             placeName={place.name}
@@ -133,23 +139,26 @@ export default async function PlacePage({ params }: { params: Promise<{ slug: st
         </ScrollReveal>
 
         {/* What you receive */}
-        <ScrollReveal animation="reveal-stagger" className="grid md:grid-cols-3 gap-4 mb-10">
-          {[
-            { icon: "📹", title: "Video Proof", desc: "Your name on a board during the ritual. Delivered within 24 hours via WhatsApp or email." },
-            { icon: "📸", title: "Photo Set", desc: "Multiple high-resolution photos of the ritual and the sacred space." },
-            { icon: "📦", title: "Blessed Items Shipped", desc: "Prasad, sacred ash, water, or tradition-specific items shipped worldwide." },
-          ].map(w => (
-            <div key={w.title} className="bg-white border border-stone-100 rounded-2xl p-5 shadow-sm">
-              <span className="text-3xl block mb-3">{w.icon}</span>
-              <h4 className="font-bold text-stone-800 mb-1 text-sm">{w.title}</h4>
-              <p className="text-stone-500 text-xs leading-relaxed">{w.desc}</p>
-            </div>
-          ))}
+        <ScrollReveal animation="reveal-stagger" className="mb-10">
+          <h2 className="font-display text-2xl font-bold text-stone-800 mb-6">{t('what_you_receive')}</h2>
+          <div className="grid md:grid-cols-3 gap-4">
+            {[
+              { icon: "📹", title: t('video_proof'), desc: t('video_proof_desc') },
+              { icon: "📸", title: t('photo_set'), desc: t('photo_set_desc') },
+              { icon: "📦", title: t('shipping'), desc: t('shipping_desc') },
+            ].map(w => (
+              <div key={w.title} className="bg-white border border-stone-100 rounded-2xl p-5 shadow-sm">
+                <span className="text-3xl block mb-3">{w.icon}</span>
+                <h4 className="font-bold text-stone-800 mb-1 text-sm">{w.title}</h4>
+                <p className="text-stone-500 text-xs leading-relaxed">{w.desc}</p>
+              </div>
+            ))}
+          </div>
         </ScrollReveal>
 
         {/* Festivals */}
         <ScrollReveal className="bg-white rounded-2xl p-6 shadow-sm border border-stone-100 mb-10">
-          <h3 className="font-display font-bold text-stone-800 mb-4 text-lg">Major Festivals &amp; Dates</h3>
+          <h3 className="font-display font-bold text-stone-800 mb-4 text-lg">{t('festivals')}</h3>
           <div className="flex flex-wrap gap-2">
             {place.festivals.map(f => (
               <span key={f} className={`text-sm px-3 py-1.5 rounded-full border ${place.theme.badge} ${place.theme.badgeText} font-medium`}>
@@ -161,11 +170,11 @@ export default async function PlacePage({ params }: { params: Promise<{ slug: st
 
         {/* Diaspora */}
         <ScrollReveal className="bg-white rounded-2xl p-6 shadow-sm border border-stone-100 mb-10">
-          <h3 className="font-display font-bold text-stone-800 mb-3 text-lg">Devotees Worldwide</h3>
+          <h3 className="font-display font-bold text-stone-800 mb-3 text-lg">🌍 Devotees Worldwide</h3>
           <div className="flex flex-wrap gap-2">
             {place.diaspora.map(d => (
               <span key={d} className="text-xs bg-stone-100 text-stone-600 px-3 py-1.5 rounded-full border border-stone-200">
-                🌍 {d}
+                {d}
               </span>
             ))}
           </div>
