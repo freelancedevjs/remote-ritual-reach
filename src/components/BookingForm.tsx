@@ -6,10 +6,12 @@ type Ritual = {
   id: string
   name: string
   description: string
+  offerings: string
   price: number
   duration: string
   includes: string[]
   livestream?: boolean
+  source?: string
 }
 
 type Props = {
@@ -70,17 +72,39 @@ export default function BookingForm({ rituals, placeName, accentClass, accentTex
                   : "border-stone-200 bg-white hover:border-stone-300 hover:bg-stone-50/50"
               }`}
             >
+              {/* Title + price row */}
               <div className="flex justify-between items-start mb-2">
-                <h3 className={`font-bold text-sm leading-snug ${isSelected ? badgeTextClass : "text-stone-800"}`}>
+                <h3 className={`font-bold text-sm leading-snug pr-2 ${isSelected ? badgeTextClass : "text-stone-800"}`}>
                   {r.name}
                 </h3>
-                <span className={`font-display text-base font-bold flex-shrink-0 ml-3 ${isSelected ? badgeTextClass : "text-stone-700"}`}>
+                <span className={`font-display text-lg font-bold flex-shrink-0 ${isSelected ? badgeTextClass : "text-stone-700"}`}>
                   ${r.price}
                 </span>
               </div>
-              <p className={`text-xs mb-3 ${isSelected ? `${badgeTextClass} opacity-70` : "text-stone-400"}`}>
-                ⏱ {r.duration}{r.livestream && " · 📡 Livestream available"}
+
+              {/* Description */}
+              <p className={`text-xs leading-relaxed mb-3 ${isSelected ? `${badgeTextClass} opacity-80` : "text-stone-500"}`}>
+                {r.description}
               </p>
+
+              {/* Meta row: duration + livestream badge */}
+              <div className={`flex flex-wrap items-center gap-2 text-xs mb-3 ${isSelected ? `${badgeTextClass} opacity-70` : "text-stone-400"}`}>
+                <span>⏱ {r.duration}</span>
+                {r.livestream && (
+                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${isSelected ? "bg-white/25" : "bg-emerald-50 text-emerald-700 border border-emerald-200"}`}>
+                    📡 Livestream
+                  </span>
+                )}
+              </div>
+
+              {/* Offerings */}
+              {r.offerings && (
+                <p className={`text-xs mb-3 ${isSelected ? `${badgeTextClass} opacity-65` : "text-stone-400"}`}>
+                  🌸 <span className="font-medium">Offerings:</span> {r.offerings}
+                </p>
+              )}
+
+              {/* Includes */}
               <ul className="space-y-1">
                 {r.includes.map(inc => (
                   <li key={inc} className={`text-xs flex items-start gap-1.5 ${isSelected ? badgeTextClass : "text-stone-500"}`}>
@@ -89,6 +113,7 @@ export default function BookingForm({ rituals, placeName, accentClass, accentTex
                   </li>
                 ))}
               </ul>
+
               {isSelected && (
                 <div className={`mt-3 pt-3 border-t border-current/20 ${badgeTextClass} opacity-70 text-xs font-semibold`}>
                   ✓ {t('select_ritual')}

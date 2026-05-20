@@ -52,6 +52,7 @@ export default async function PlacePage({ params }: { params: Promise<{ slug: st
 
   const t = await getTranslations({ locale, namespace: 'place' })
   const tNav = await getTranslations({ locale, namespace: 'nav' })
+  const minPrice = Math.min(...place.rituals.map(r => r.price))
 
   return (
     <div className={`min-h-screen ${place.theme.bg} overflow-x-hidden`}>
@@ -79,16 +80,29 @@ export default async function PlacePage({ params }: { params: Promise<{ slug: st
         <div className="relative z-10 max-w-5xl mx-auto px-4 py-12 md:py-16">
           <div className="flex items-start gap-4 mb-5">
             <span className="text-5xl md:text-6xl animate-float">{place.icon}</span>
-            <div>
-              <span className="inline-block text-xs font-bold px-3 py-1 rounded-full mb-3 bg-white/15 uppercase tracking-widest">
-                {place.type} · {place.faith}
-              </span>
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-wrap gap-2 mb-3">
+                <span className="text-xs font-bold px-3 py-1 rounded-full bg-white/15 uppercase tracking-widest capitalize">
+                  {place.type}
+                </span>
+                <span className="text-xs font-medium px-3 py-1 rounded-full bg-white/10 border border-white/20">
+                  {place.faith}
+                </span>
+                <span className="text-xs font-medium px-3 py-1 rounded-full bg-white/10 border border-white/20">
+                  {place.rituals.length} ritual{place.rituals.length !== 1 ? "s" : ""} · from ${minPrice}
+                </span>
+              </div>
               <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-2">
                 {place.name}
               </h1>
               <p className="opacity-80 text-sm flex items-center gap-1">
                 📍 {place.location.city}, {place.location.state}, {place.location.country}
               </p>
+              {place.trustNotes && (
+                <p className="mt-3 text-xs opacity-60 flex items-center gap-1.5">
+                  🏛️ {t('managed_by')}: {place.trustNotes}
+                </p>
+              )}
             </div>
           </div>
           <div className="flex flex-wrap gap-2 mt-5">
@@ -180,11 +194,15 @@ export default async function PlacePage({ params }: { params: Promise<{ slug: st
           </div>
         </ScrollReveal>
 
-        {place.trustNotes && (
-          <ScrollReveal>
-            <p className="text-xs text-stone-400 text-center py-4">🏛️ {place.trustNotes}</p>
-          </ScrollReveal>
-        )}
+        <ScrollReveal>
+          <div className="flex flex-wrap gap-2 justify-center py-4">
+            {place.tags.map(tag => (
+              <span key={tag} className={`text-xs px-3 py-1.5 rounded-full font-medium ${place.theme.badge} ${place.theme.badgeText}`}>
+                #{tag}
+              </span>
+            ))}
+          </div>
+        </ScrollReveal>
       </main>
 
       <footer className={`${place.theme.nav} ${place.theme.navText} py-8 px-4 text-center mt-10`}>

@@ -197,9 +197,13 @@ export default function HomePage() {
                       </div>
                     </div>
                     <p className="text-stone-500 text-xs mb-1 font-semibold">{p.primaryFigure}</p>
+                    <p className="text-stone-400 text-[11px] mb-1 font-medium">{p.faith}</p>
                     <p className="text-stone-400 text-xs mb-4 line-clamp-2 leading-relaxed">{p.description.slice(0, 100)}…</p>
                     <div className="flex items-center justify-between pt-3 border-t border-stone-200/50">
-                      <span className={`text-xs px-2.5 py-1 rounded-full capitalize font-semibold ${p.theme.badge} ${p.theme.badgeText}`}>{p.type}</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className={`text-xs px-2.5 py-1 rounded-full capitalize font-semibold ${p.theme.badge} ${p.theme.badgeText}`}>{p.type}</span>
+                        <span className="text-xs text-stone-400">{p.rituals.length} rituals</span>
+                      </div>
                       <span className="text-sm font-bold text-stone-700">{t('home.from_price', { price: Math.min(...p.rituals.map(r => r.price)) })}</span>
                     </div>
                   </div>
