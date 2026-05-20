@@ -6,6 +6,7 @@ import { places } from "@/lib/places-data"
 import { gurus } from "@/lib/gurus-data"
 import ScrollReveal from "@/components/ScrollReveal"
 import LanguageSwitcher from "@/components/LanguageSwitcher"
+import HeroShader from "@/components/HeroShader"
 
 const typeFilters = ["All", "temple", "gurdwara", "dargah", "church", "monastery", "ashram", "shrine", "samadhi"]
 
@@ -75,6 +76,8 @@ export default function HomePage() {
 
       {/* ── HERO */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-stone-950 pt-14">
+        {/* Interactive shader wallpaper — reacts to mouse and clicks */}
+        <HeroShader />
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full glow-gold pointer-events-none animate-glow-pulse" />
         <div className="absolute top-1/4 left-1/5 w-[350px] h-[350px] rounded-full bg-orange-500/5 blur-[90px] pointer-events-none" />
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
