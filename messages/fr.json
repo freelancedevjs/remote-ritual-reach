@@ -86,6 +86,9 @@
     "total_label": "Total",
     "success_note1": "Prêtre assigné dans les 24h",
     "success_note2": "Vidéo dans les 24h du rituel",
-    "duration": "Durée"
+    "duration": "Durée",
+    "success_hope": "Nous avons reçu votre intention. Les arrangements sacrés se déroulent à leur propre rythme — nous vous contacterons bientôt pour confirmer les détails.",
+    "pay_now": "Payer maintenant",
+    "donate": "Faire un don"
   }
 }

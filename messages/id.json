@@ -1,5 +1,8 @@
 {
-  "nav": { "back": "← Kembali ke SacredReach", "allPlaces": "Semua Tempat" },
+  "nav": {
+    "back": "← Kembali ke SacredReach",
+    "allPlaces": "Semua Tempat"
+  },
   "home": {
     "tagline": "SacredReach",
     "hero_title": "Keyakinan Anda",
@@ -35,7 +38,57 @@
     "trust_countries_desc": "12.000+ ritual dilaksanakan untuk keluarga diaspora",
     "footer_text": "Setiap tempat suci adalah alam semesta yang independen · Melayani umat di 40+ negara"
   },
-  "place": { "book_title": "Pilih Ritual", "book_subtitle": "Pilih ritual di bawah ini untuk melihat apa yang termasuk dan lanjutkan pemesanan.", "auspicious": "Hari Baik", "what_you_receive": "Apa yang Akan Anda Terima", "video_proof": "Bukti Video", "video_proof_desc": "Nama Anda pada papan nama selama ritual. Dikirim dalam 24 jam.", "photo_set": "Set Foto", "photo_set_desc": "Beberapa foto beresolusi tinggi dari ritual dan ruang suci.", "shipping": "Barang yang Diberkati Dikirim", "shipping_desc": "Prasad, abu suci, air, atau barang tradisi tertentu dikirim ke seluruh dunia.", "festivals": "Festival Utama & Tanggal Istimewa", "managed_by": "Dikelola oleh" },
-  "guru": { "life_legacy": "Kehidupan & Warisan", "core_teaching": "Ajaran Inti", "key_works": "Karya & Ajaran Utama", "ritual_places": "Laksanakan Ritual di Tempat Suci Mereka", "rituals_available": "{count} ritual tersedia" },
-  "booking": { "select_ritual": "Pilih ritual", "your_details": "Detail Anda", "full_name": "Nama Lengkap Anda", "full_name_placeholder": "Seperti yang ingin dibacakan dalam ritual", "identifier": "Gotra / Nama ayah / Desa (opsional)", "family": "Anggota keluarga yang disertakan (opsional)", "family_placeholder": "Contoh: nama pasangan, nama anak-anak", "whatsapp": "Nomor WhatsApp (untuk pengiriman video)", "whatsapp_placeholder": "+62 812 0000 0000", "date": "Tanggal yang Diinginkan", "addons": "Tambahan", "prasad_label": "Pengiriman Internasional Prasad (+$15)", "prasad_desc": "Barang yang diberkati dikirim ke alamat Anda di seluruh dunia. 10–21 hari.", "priority_video_label": "Pengiriman Video Prioritas (+$10)", "priority_video_desc": "Video HD yang diedit dengan nama Anda, dikirim dalam 4 jam.", "total": "Total", "confirm_button": "Konfirmasi Pemesanan →", "required_note": "* Kolom yang diperlukan. Pembayaran dikumpulkan setelah konfirmasi penugasan pendeta.", "success_title": "Pemesanan Diterima!", "success_subtitle": "Ritual Anda di {place} telah dipesan. Konfirmasi akan dikirim ke WhatsApp Anda dalam 2 jam.", "ritual_label": "Ritual", "name_label": "Nama", "date_label": "Tanggal", "total_label": "Total", "success_note1": "Pendeta akan ditugaskan dalam 24j", "success_note2": "Video dalam 24j setelah ritual", "duration": "Durasi" }
+  "place": {
+    "book_title": "Pilih Ritual",
+    "book_subtitle": "Pilih ritual di bawah ini untuk melihat apa yang termasuk dan lanjutkan pemesanan.",
+    "auspicious": "Hari Baik",
+    "what_you_receive": "Apa yang Akan Anda Terima",
+    "video_proof": "Bukti Video",
+    "video_proof_desc": "Nama Anda pada papan nama selama ritual. Dikirim dalam 24 jam.",
+    "photo_set": "Set Foto",
+    "photo_set_desc": "Beberapa foto beresolusi tinggi dari ritual dan ruang suci.",
+    "shipping": "Barang yang Diberkati Dikirim",
+    "shipping_desc": "Prasad, abu suci, air, atau barang tradisi tertentu dikirim ke seluruh dunia.",
+    "festivals": "Festival Utama & Tanggal Istimewa",
+    "managed_by": "Dikelola oleh"
+  },
+  "guru": {
+    "life_legacy": "Kehidupan & Warisan",
+    "core_teaching": "Ajaran Inti",
+    "key_works": "Karya & Ajaran Utama",
+    "ritual_places": "Laksanakan Ritual di Tempat Suci Mereka",
+    "rituals_available": "{count} ritual tersedia"
+  },
+  "booking": {
+    "select_ritual": "Pilih ritual",
+    "your_details": "Detail Anda",
+    "full_name": "Nama Lengkap Anda",
+    "full_name_placeholder": "Seperti yang ingin dibacakan dalam ritual",
+    "identifier": "Gotra / Nama ayah / Desa (opsional)",
+    "family": "Anggota keluarga yang disertakan (opsional)",
+    "family_placeholder": "Contoh: nama pasangan, nama anak-anak",
+    "whatsapp": "Nomor WhatsApp (untuk pengiriman video)",
+    "whatsapp_placeholder": "+62 812 0000 0000",
+    "date": "Tanggal yang Diinginkan",
+    "addons": "Tambahan",
+    "prasad_label": "Pengiriman Internasional Prasad (+$15)",
+    "prasad_desc": "Barang yang diberkati dikirim ke alamat Anda di seluruh dunia. 10–21 hari.",
+    "priority_video_label": "Pengiriman Video Prioritas (+$10)",
+    "priority_video_desc": "Video HD yang diedit dengan nama Anda, dikirim dalam 4 jam.",
+    "total": "Total",
+    "confirm_button": "Konfirmasi Pemesanan →",
+    "required_note": "* Kolom yang diperlukan. Pembayaran dikumpulkan setelah konfirmasi penugasan pendeta.",
+    "success_title": "Pemesanan Diterima!",
+    "success_subtitle": "Ritual Anda di {place} telah dipesan. Konfirmasi akan dikirim ke WhatsApp Anda dalam 2 jam.",
+    "ritual_label": "Ritual",
+    "name_label": "Nama",
+    "date_label": "Tanggal",
+    "total_label": "Total",
+    "success_note1": "Pendeta akan ditugaskan dalam 24j",
+    "success_note2": "Video dalam 24j setelah ritual",
+    "duration": "Durasi",
+    "success_hope": "Kami telah menerima niat Anda. Urusan suci berlangsung pada waktunya sendiri — kami akan segera menghubungi Anda untuk mengkonfirmasi rincian.",
+    "pay_now": "Bayar Sekarang",
+    "donate": "Donasi"
+  }
 }

@@ -1,5 +1,8 @@
 {
-  "nav": { "back": "← SacredReach로 돌아가기", "allPlaces": "모든 장소" },
+  "nav": {
+    "back": "← SacredReach로 돌아가기",
+    "allPlaces": "모든 장소"
+  },
   "home": {
     "tagline": "SacredReach",
     "hero_title": "당신의 믿음은",
@@ -83,6 +86,9 @@
     "total_label": "합계",
     "success_note1": "사제가 24시간 이내에 배정됩니다",
     "success_note2": "의식 후 24시간 이내에 영상 제공",
-    "duration": "기간"
+    "duration": "기간",
+    "success_hope": "귀하의 의향을 받았습니다. 신성한 일은 그 자체의 시간에 이루어집니다 — 곧 연락드려 세부 사항을 확인하겠습니다.",
+    "pay_now": "지금 결제",
+    "donate": "기부하기"
   }
 }

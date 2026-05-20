@@ -1,5 +1,8 @@
 {
-  "nav": { "back": "← Zurück zu SacredReach", "allPlaces": "Alle Orte" },
+  "nav": {
+    "back": "← Zurück zu SacredReach",
+    "allPlaces": "Alle Orte"
+  },
   "home": {
     "tagline": "SacredReach",
     "hero_title": "Dein Glaube kennt",
@@ -83,6 +86,9 @@
     "total_label": "Gesamt",
     "success_note1": "Priester wird innerhalb 24 Std. zugewiesen",
     "success_note2": "Video innerhalb 24 Std. nach dem Ritual",
-    "duration": "Dauer"
+    "duration": "Dauer",
+    "success_hope": "Wir haben Ihre Absicht erhalten. Heilige Angelegenheiten entfalten sich in ihrem eigenen Tempo — wir werden uns bald bei Ihnen melden.",
+    "pay_now": "Jetzt bezahlen",
+    "donate": "Spenden"
   }
 }

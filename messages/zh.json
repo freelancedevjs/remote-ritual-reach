@@ -1,5 +1,8 @@
 {
-  "nav": { "back": "← 返回 SacredReach", "allPlaces": "所有地点" },
+  "nav": {
+    "back": "← 返回 SacredReach",
+    "allPlaces": "所有地点"
+  },
   "home": {
     "tagline": "SacredReach",
     "hero_title": "您的信仰",
@@ -83,6 +86,9 @@
     "total_label": "总计",
     "success_note1": "祭司将在24小时内分配",
     "success_note2": "仪式后24小时内提供视频",
-    "duration": "时长"
+    "duration": "时长",
+    "success_hope": "我们已收到您的心意。神圣的安排自有其时机——我们将很快与您联系，确认细节并推进安排。",
+    "pay_now": "立即付款",
+    "donate": "捐赠"
   }
 }

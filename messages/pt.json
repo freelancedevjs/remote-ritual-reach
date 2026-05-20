@@ -1,5 +1,8 @@
 {
-  "nav": { "back": "← Voltar ao SacredReach", "allPlaces": "Todos os locais" },
+  "nav": {
+    "back": "← Voltar ao SacredReach",
+    "allPlaces": "Todos os locais"
+  },
   "home": {
     "tagline": "SacredReach",
     "hero_title": "A sua fé não",
@@ -83,6 +86,9 @@
     "total_label": "Total",
     "success_note1": "Sacerdote atribuído em 24h",
     "success_note2": "Vídeo em 24h após o ritual",
-    "duration": "Duração"
+    "duration": "Duração",
+    "success_hope": "Recebemos a sua intenção. Os assuntos sagrados desenrolam-se ao seu próprio ritmo — entraremos em contacto em breve para confirmar os detalhes.",
+    "pay_now": "Pagar agora",
+    "donate": "Doar"
   }
 }

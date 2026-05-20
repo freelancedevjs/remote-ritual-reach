@@ -1,5 +1,8 @@
 {
-  "nav": { "back": "→ SacredReach پر واپس جائیں", "allPlaces": "تمام مقامات" },
+  "nav": {
+    "back": "→ SacredReach پر واپس جائیں",
+    "allPlaces": "تمام مقامات"
+  },
   "home": {
     "tagline": "SacredReach",
     "hero_title": "آپ کا ایمان",
@@ -83,6 +86,9 @@
     "total_label": "کل",
     "success_note1": "24 گھنٹے میں پجاری مقرر ہو گا",
     "success_note2": "رسم کے 24 گھنٹے میں ویڈیو",
-    "duration": "مدت"
+    "duration": "مدت",
+    "success_hope": "آپ کی نیت ہم تک پہنچ گئی ہے۔ مقدس امور اپنے وقت پر ہوتے ہیں — ہم جلد ہی آپ سے رابطہ کریں گے۔",
+    "pay_now": "ابھی ادائیگی کریں",
+    "donate": "عطیہ کریں"
   }
 }

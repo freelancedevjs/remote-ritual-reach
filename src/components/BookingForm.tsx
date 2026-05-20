@@ -1,6 +1,7 @@
 "use client"
 import { useState } from "react"
 import { useTranslations } from "next-intl"
+import { submitBooking } from "@/app/actions/booking"
 
 type Ritual = {
   id: string
@@ -17,30 +18,35 @@ type Ritual = {
 type Props = {
   rituals: Ritual[]
   placeName: string
+  locale?: string
   accentClass: string
   accentTextClass: string
   badgeClass: string
   badgeTextClass: string
 }
 
-export default function BookingForm({ rituals, placeName, accentClass, accentTextClass, badgeClass, badgeTextClass }: Props) {
+export default function BookingForm({ rituals, placeName, locale = "en", accentClass, accentTextClass, badgeClass, badgeTextClass }: Props) {
   const t = useTranslations('booking')
   const [selectedRitual, setSelectedRitual] = useState<Ritual | null>(null)
   const [prasadAdd, setPrasadAdd] = useState(false)
   const [priorityVideo, setPriorityVideo] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
+  const [bookingId, setBookingId] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [bookingError, setBookingError] = useState<string | null>(null)
   const [form, setForm] = useState({ name: "", identifier: "", family: "", whatsapp: "", date: "" })
 
   const total = selectedRitual ? selectedRitual.price + (prasadAdd ? 15 : 0) + (priorityVideo ? 10 : 0) : 0
 
-  if (submitted) {
+  if (bookingId) {
     return (
-      <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-8 text-center">
+      <div className="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-8 text-center">
         <div className="text-6xl mb-5 animate-float inline-block">🙏</div>
         <h3 className="font-display text-2xl font-bold text-stone-800 mb-2">{t('success_title')}</h3>
-        <p className="text-stone-500 mb-6 leading-relaxed">{t('success_subtitle', { place: placeName })}</p>
-        <div className="bg-white rounded-xl p-5 text-left max-w-sm mx-auto mb-6 border border-green-100 shadow-sm">
+
+        {/* Booking summary */}
+        <div className="bg-white rounded-xl p-5 text-left max-w-sm mx-auto mb-6 border border-amber-100 shadow-sm">
           <div className="space-y-2">
+            <p className="text-sm text-stone-500 font-medium">{placeName}</p>
             <p className="text-sm text-stone-600"><span className="font-semibold text-stone-700">{t('ritual_label')}:</span> {selectedRitual?.name}</p>
             <p className="text-sm text-stone-600"><span className="font-semibold text-stone-700">{t('name_label')}:</span> {form.name}</p>
             <p className="text-sm text-stone-600"><span className="font-semibold text-stone-700">{t('date_label')}:</span> {form.date}</p>
@@ -49,9 +55,26 @@ export default function BookingForm({ rituals, placeName, accentClass, accentTex
             </div>
           </div>
         </div>
-        <div className="flex flex-wrap justify-center gap-3 text-xs">
-          <span className="bg-green-100 text-green-700 px-3 py-1.5 rounded-full font-medium">✅ {t('success_note1')}</span>
-          <span className="bg-green-100 text-green-700 px-3 py-1.5 rounded-full font-medium">📹 {t('success_note2')}</span>
+
+        {/* Hopeful message */}
+        <p className="text-stone-500 text-sm leading-relaxed max-w-sm mx-auto mb-8">
+          {t('success_hope')}
+        </p>
+
+        {/* Payment buttons */}
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <a
+            href="#"
+            className="inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-7 py-3.5 rounded-xl transition-all hover:scale-105 active:scale-95 shadow-md text-sm"
+          >
+            💳 {t('pay_now')}
+          </a>
+          <a
+            href="#"
+            className="inline-flex items-center justify-center gap-2 bg-white border-2 border-amber-300 hover:border-amber-400 text-amber-700 hover:text-amber-800 font-bold px-7 py-3.5 rounded-xl transition-all hover:scale-105 active:scale-95 text-sm"
+          >
+            🤲 {t('donate')}
+          </a>
         </div>
       </div>
     )
@@ -231,12 +254,30 @@ export default function BookingForm({ rituals, placeName, accentClass, accentTex
                 <p className="font-display text-3xl font-bold text-stone-800">${total}</p>
               </div>
               <button
-                onClick={() => { if (form.name && form.whatsapp && form.date) setSubmitted(true) }}
-                className={`${accentClass} ${accentTextClass} font-bold px-7 py-3.5 rounded-xl transition-all hover:opacity-90 hover:scale-105 active:scale-95 shadow-md text-sm`}
+                disabled={submitting}
+                onClick={async () => {
+                  if (!form.name || !form.whatsapp || !form.date || !selectedRitual) return
+                  setSubmitting(true)
+                  setBookingError(null)
+                  const result = await submitBooking({
+                    name: form.name, identifier: form.identifier, family: form.family,
+                    whatsapp: form.whatsapp, date: form.date,
+                    placeName, ritualId: selectedRitual.id, ritualName: selectedRitual.name,
+                    ritualPrice: selectedRitual.price, prasadAddon: prasadAdd,
+                    priorityVideo, totalAmount: total, locale,
+                  })
+                  setSubmitting(false)
+                  if (result.ok) setBookingId(result.id)
+                  else setBookingError(result.error)
+                }}
+                className={`${accentClass} ${accentTextClass} font-bold px-7 py-3.5 rounded-xl transition-all hover:opacity-90 hover:scale-105 active:scale-95 shadow-md text-sm disabled:opacity-50 disabled:cursor-not-allowed`}
               >
-                {t('confirm_button')}
+                {submitting ? "…" : t('confirm_button')}
               </button>
             </div>
+            {bookingError && (
+              <p className="text-xs text-red-500 font-medium">{bookingError}</p>
+            )}
             <p className="text-xs text-stone-400">{t('required_note')}</p>
           </div>
         </div>

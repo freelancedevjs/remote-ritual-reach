@@ -1,5 +1,8 @@
 {
-  "nav": { "back": "← SacredReachに戻る", "allPlaces": "すべての聖地" },
+  "nav": {
+    "back": "← SacredReachに戻る",
+    "allPlaces": "すべての聖地"
+  },
   "home": {
     "tagline": "SacredReach",
     "hero_title": "信仰に",
@@ -83,6 +86,9 @@
     "total_label": "合計",
     "success_note1": "24時間以内に聖職者が決まります",
     "success_note2": "儀式後24時間以内に動画をお届け",
-    "duration": "所要時間"
+    "duration": "所要時間",
+    "success_hope": "ご意向を承りました。聖なる営みはその時を待ちます — 詳細の確認のため、近日中にご連絡いたします。",
+    "pay_now": "今すぐ支払う",
+    "donate": "寄付する"
   }
 }

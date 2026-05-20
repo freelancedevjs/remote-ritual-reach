@@ -1,5 +1,8 @@
 {
-  "nav": { "back": "→ العودة إلى SacredReach", "allPlaces": "جميع الأماكن" },
+  "nav": {
+    "back": "→ العودة إلى SacredReach",
+    "allPlaces": "جميع الأماكن"
+  },
   "home": {
     "tagline": "SacredReach",
     "hero_title": "إيمانك لا",
@@ -83,6 +86,9 @@
     "total_label": "الإجمالي",
     "success_note1": "سيُعيَّن الكاهن خلال 24 ساعة",
     "success_note2": "فيديو خلال 24 ساعة من الشعيرة",
-    "duration": "المدة"
+    "duration": "المدة",
+    "success_hope": "لقد تلقينا نيتك. العمل المقدس يأخذ وقته الخاص — سنتواصل معك قريباً لتأكيد التفاصيل والمتابعة.",
+    "pay_now": "ادفع الآن",
+    "donate": "تبرع"
   }
 }

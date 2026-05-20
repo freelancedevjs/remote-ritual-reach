@@ -1,5 +1,8 @@
 {
-  "nav": { "back": "← SacredReach પર પાછા જાઓ", "allPlaces": "તમામ સ્થળો" },
+  "nav": {
+    "back": "← SacredReach પર પાછા જાઓ",
+    "allPlaces": "તમામ સ્થળો"
+  },
   "home": {
     "tagline": "SacredReach",
     "hero_title": "તમારી શ્રદ્ધાને",
@@ -83,6 +86,9 @@
     "total_label": "કુલ",
     "success_note1": "24 કલાકમાં પૂજારી નિયુક્ત થશે",
     "success_note2": "વિધિ પછી 24 કલાકમાં વીડિઓ",
-    "duration": "સમયગાળો"
+    "duration": "સમયગાળો",
+    "success_hope": "તમારી ભાવના અમને મળી ગઈ છે. પવિત્ર કાર્ય તેના સમયે થાય છે — અમે ટૂંક સમયમાં સંપર્ક કરીશું।",
+    "pay_now": "હવે ચૂકવો",
+    "donate": "દાન કરો"
   }
 }

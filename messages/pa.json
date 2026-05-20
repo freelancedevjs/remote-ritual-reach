@@ -1,5 +1,8 @@
 {
-  "nav": { "back": "← SacredReach ਤੇ ਵਾਪਸ ਜਾਓ", "allPlaces": "ਸਾਰੀਆਂ ਥਾਵਾਂ" },
+  "nav": {
+    "back": "← SacredReach ਤੇ ਵਾਪਸ ਜਾਓ",
+    "allPlaces": "ਸਾਰੀਆਂ ਥਾਵਾਂ"
+  },
   "home": {
     "tagline": "SacredReach",
     "hero_title": "ਤੁਹਾਡੀ ਸ਼ਰਧਾ ਨੂੰ",
@@ -83,6 +86,9 @@
     "total_label": "ਕੁੱਲ",
     "success_note1": "24 ਘੰਟੇ ਵਿੱਚ ਪੁਜਾਰੀ ਨਿਯੁਕਤ ਹੋਵੇਗਾ",
     "success_note2": "ਰਸਮ ਦੇ 24 ਘੰਟੇ ਵਿੱਚ ਵੀਡੀਓ",
-    "duration": "ਸਮਾਂ"
+    "duration": "ਸਮਾਂ",
+    "success_hope": "ਤੁਹਾਡੀ ਭਾਵਨਾ ਸਾਨੂੰ ਮਿਲ ਗਈ ਹੈ। ਪਵਿੱਤਰ ਕਾਰਜ ਆਪਣੇ ਸਮੇਂ ਤੇ ਹੁੰਦੇ ਹਨ — ਅਸੀਂ ਜਲਦੀ ਹੀ ਤੁਹਾਡੇ ਨਾਲ ਸੰਪਰਕ ਕਰਾਂਗੇ।",
+    "pay_now": "ਹੁਣ ਭੁਗਤਾਨ ਕਰੋ",
+    "donate": "ਦਾਨ ਕਰੋ"
   }
 }
