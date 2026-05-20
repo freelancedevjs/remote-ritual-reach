@@ -297,6 +297,11 @@ export default function HomePage() {
           <p className="font-display text-amber-400 text-sm font-bold tracking-[0.3em] uppercase mb-3">✦ SacredReach ✦</p>
           <p className="text-stone-600 text-xs leading-loose">{t('home.footer_text')}</p>
           <p className="text-stone-700 text-xs mt-6">© 2024 SacredReach</p>
+          <div className="mt-3">
+            <Link href="/contact" className="text-stone-400 hover:text-amber-400 text-xs underline transition-colors">
+              Contact & Support
+            </Link>
+          </div>
         </div>
       </footer>
     </main>
