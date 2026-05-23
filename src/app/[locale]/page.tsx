@@ -4,11 +4,30 @@ import { useTranslations } from "next-intl"
 import { Link } from "@/i18n/navigation"
 import { places } from "@/lib/places-data"
 import { gurus } from "@/lib/gurus-data"
+import { mysticalSciences } from "@/lib/mystical-sciences-data"
 import ScrollReveal from "@/components/ScrollReveal"
 import LanguageSwitcher from "@/components/LanguageSwitcher"
 import HeroShader from "@/components/HeroShader"
 
 const typeFilters = ["All", "temple", "gurdwara", "dargah", "church", "monastery", "ashram", "shrine", "samadhi"]
+
+// Mystical science category metadata for display
+const scienceCategoryMeta: Record<string, { label: string; color: string }> = {
+  numerology:    { label: "Numerology",     color: "bg-violet-100 text-violet-800" },
+  astrology:     { label: "Astrology",      color: "bg-indigo-100 text-indigo-800" },
+  vastu:         { label: "Vastu",          color: "bg-amber-100 text-amber-800" },
+  nameology:     { label: "Nameology",      color: "bg-rose-100 text-rose-800" },
+  palmistry:     { label: "Palmistry",      color: "bg-orange-100 text-orange-800" },
+  nadi:          { label: "Nadi",           color: "bg-yellow-100 text-yellow-900" },
+  tarot:         { label: "Tarot",          color: "bg-purple-100 text-purple-900" },
+  gemstone:      { label: "Gemstone",       color: "bg-cyan-100 text-cyan-900" },
+  rudraksha:     { label: "Rudraksha",      color: "bg-stone-100 text-stone-800" },
+  "lal-kitab":   { label: "Lal Kitab",      color: "bg-red-100 text-red-800" },
+  "face-reading":{ label: "Face Reading",   color: "bg-teal-100 text-teal-800" },
+  chakra:        { label: "Chakra",         color: "bg-fuchsia-100 text-fuchsia-800" },
+  prashna:       { label: "Prashna",        color: "bg-lime-100 text-lime-800" },
+  mantra:        { label: "Mantra",         color: "bg-sky-100 text-sky-900" },
+}
 
 function SacredMandala({ className = "" }: { className?: string }) {
   const rings = [190, 150, 110, 70, 30]
@@ -65,6 +84,7 @@ export default function HomePage() {
           <span className="font-display text-amber-400 text-sm font-bold tracking-widest uppercase flex-shrink-0">✦ SacredReach</span>
           <nav className="flex items-center gap-3 sm:gap-5">
             <a href="#places" className="text-stone-400 hover:text-amber-400 transition-colors text-xs tracking-wide hidden sm:block">{t('home.places_title')}</a>
+            <a href="#sciences" className="text-stone-400 hover:text-amber-400 transition-colors text-xs tracking-wide hidden sm:block">🔮 Sciences</a>
             <a href="#gurus" className="text-stone-400 hover:text-amber-400 transition-colors text-xs tracking-wide hidden sm:block">{t('home.gurus_title').split(' ')[0]}</a>
             <LanguageSwitcher />
             <a href="#places" className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs px-4 py-2 rounded-full transition-colors hidden sm:block">
@@ -256,6 +276,96 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── MYSTICAL SCIENCES ─────────────────────────────────────── */}
+      <section id="sciences" className="py-24 px-4 bg-stone-950 relative overflow-hidden">
+        <div className="absolute -left-32 top-1/2 -translate-y-1/2 opacity-[0.04] pointer-events-none select-none">
+          <SacredMandala className="w-[600px] h-[600px] text-amber-400" />
+        </div>
+        <div className="max-w-6xl mx-auto relative z-10">
+          <ScrollReveal className="mb-4">
+            <p className="text-amber-500 text-xs font-bold tracking-[0.2em] uppercase mb-2">🔮 Ancient Wisdom Sciences</p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-2">
+              Mystical Arts &amp; Divination
+            </h2>
+            <p className="text-stone-500 text-sm max-w-2xl leading-relaxed">
+              Numerology · Astrology · Vastu · Palmistry · Tarot · Nadi · Gemstone Therapy · Mantra Healing — and more.
+              Every science is practiced by verified experts. Delivered as written reports, live video calls, or physical items.
+            </p>
+          </ScrollReveal>
+
+          {/* Category pill filters */}
+          <ScrollReveal animation="reveal-scale" delay={60} className="flex flex-wrap gap-2 mb-10 mt-6">
+            {(["All", ...Array.from(new Set(mysticalSciences.map(s => s.category)))] as string[]).map((cat, i) => {
+              const meta = scienceCategoryMeta[cat]
+              return (
+                <span
+                  key={cat}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold border cursor-default ${
+                    i === 0
+                      ? "bg-amber-500/20 text-amber-300 border-amber-500/30"
+                      : "bg-stone-800/60 text-stone-400 border-stone-700/50"
+                  }`}
+                >
+                  {i === 0 ? "All Sciences" : (meta?.label ?? cat)}
+                </span>
+              )
+            })}
+          </ScrollReveal>
+
+          <ScrollReveal animation="reveal-stagger" className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {mysticalSciences.map(science => {
+              const catMeta = scienceCategoryMeta[science.category]
+              const minPrice = Math.min(...science.packages.map(p => p.price))
+              return (
+                <Link key={science.slug} href={`/service/${science.slug}`} className="block group sacred-card">
+                  <div className="bg-stone-800/40 border border-stone-700/40 hover:border-amber-400/30 rounded-2xl overflow-hidden transition-all backdrop-blur-sm">
+                    {/* top color bar */}
+                    <div className={`h-1 w-full ${science.theme.nav}`} />
+                    <div className="p-5">
+                      <div className="flex items-start gap-3 mb-3">
+                        <div className={`flex-shrink-0 w-11 h-11 rounded-xl ${science.theme.badge} ${science.theme.badgeText} flex items-center justify-center text-xl shadow-sm`}>
+                          {science.icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-bold text-white text-sm leading-tight group-hover:text-amber-400 transition-colors mb-0.5">
+                            {science.name}
+                          </h3>
+                          <p className="text-stone-500 text-[11px] truncate">{science.originalName}</p>
+                        </div>
+                      </div>
+
+                      <p className="text-amber-400/70 text-xs font-semibold italic mb-2 leading-tight">
+                        &ldquo;{science.tagline}&rdquo;
+                      </p>
+
+                      {/* Reveals preview */}
+                      <div className="space-y-1 mb-4">
+                        {science.whatItReveals.slice(0, 3).map((reveal, i) => (
+                          <div key={i} className="flex items-start gap-1.5">
+                            <span className="text-amber-500 text-xs mt-0.5 flex-shrink-0">✦</span>
+                            <p className="text-stone-400 text-[11px] leading-relaxed line-clamp-1">{reveal}</p>
+                          </div>
+                        ))}
+                        {science.whatItReveals.length > 3 && (
+                          <p className="text-stone-600 text-[11px] pl-4">+{science.whatItReveals.length - 3} more insights →</p>
+                        )}
+                      </div>
+
+                      <div className="flex items-center justify-between pt-3 border-t border-stone-700/40">
+                        <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${catMeta?.color ?? "bg-stone-700 text-stone-300"}`}>
+                          {catMeta?.label ?? science.category}
+                        </span>
+                        <span className="text-sm font-bold text-amber-400">from ${minPrice}</span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              )
+            })}
+          </ScrollReveal>
+        </div>
+      </section>
+
       {/* ── TRUST / STATS */}
       <section className="py-24 px-4 bg-stone-950 relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none select-none">
@@ -284,7 +394,11 @@ export default function HomePage() {
           <ScrollReveal className="mt-16 text-center">
             <p className="text-stone-600 text-xs uppercase tracking-widest mb-6">Serving every tradition</p>
             <div className="flex flex-wrap gap-4 justify-center">
-              {["🔱 Hindu", "🌟 Sikh", "🌙 Sufi", "⛪ Christian", "☸️ Buddhist", "🕊️ Jain", "✨ Universal"].map(f => (
+              {[
+                "🔱 Hindu", "🌟 Sikh", "🌙 Sufi", "⛪ Christian", "☸️ Buddhist", "🕊️ Jain", "✨ Universal",
+                "🔢 Numerology", "⭐ Astrology", "🏠 Vastu", "✋ Palmistry", "🔤 Nameology",
+                "📜 Nadi", "🃏 Tarot", "💎 Gemstone", "📿 Rudraksha", "🕉️ Mantra",
+              ].map(f => (
                 <span key={f} className="glass text-stone-400 text-xs px-4 py-2 rounded-full">{f}</span>
               ))}
             </div>

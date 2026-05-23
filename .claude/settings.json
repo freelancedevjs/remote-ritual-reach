@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:shrikashivishwanath.org)",
+      "WebFetch(domain:www.tirumala.org)",
+      "WebFetch(domain:badrinath-kedarnath.gov.in)",
+      "WebFetch(domain:www.euttaranchal.com)",
+      "WebFetch(domain:tirumalatirupationline.com)",
+      "WebFetch(domain:shrimahakaleshwar.com)",
+      "WebFetch(domain:www.shrimahakaleshwar.mp.gov.in)",
+      "WebFetch(domain:iskconvrindavan.com)",
+      "WebFetch(domain:www.iskconvrindavandonation.com)",
+      "WebFetch(domain:sgpc.net)",
+      "WebFetch(domain:www.syedajmersharif.com)",
+      "WebFetch(domain:www.amritapuri.org)",
+      "WebFetch(domain:donations.belurmath.org)",
+      "WebFetch(domain:www.vailankannishrine.net)",
+      "WebFetch(domain:www.shreejagannatha.in)",
+      "WebFetch(domain:sgpcuk.com)",
+      "WebFetch(domain:vailankannishrine.net)",
+      "WebFetch(domain:www.nizamuddinaulia.org)",
+      "WebFetch(domain:www.rootinstitute.ngo)",
+      "WebFetch(domain:www.ajmerdargah.in)",
+      "WebFetch(domain:www.osho.com)",
+      "WebFetch(domain:www.churchtimings.com)",
+      "WebFetch(domain:votiveshrine.in)",
+      "WebFetch(domain:www.ttdsevaonline.net)"
+    ]
+  }
+}

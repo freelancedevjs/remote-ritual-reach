@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
-import Link from "next/link"
+import { Link } from "@/i18n/navigation"
+import { setRequestLocale } from "next-intl/server"
 import ContactForm from "@/components/ContactForm"
 
 export const metadata: Metadata = {
@@ -40,16 +41,17 @@ export default async function ContactPage({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
+  setRequestLocale(locale)
 
   return (
     <main className="min-h-screen bg-stone-50">
       {/* Nav */}
       <nav className="bg-stone-900 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-50 shadow-md">
-        <Link href={`/${locale === "en" ? "" : locale}`} className="font-bold flex items-center gap-2 text-amber-400">
+        <Link href="/" className="font-bold flex items-center gap-2 text-amber-400">
           SacredReach
         </Link>
         <Link
-          href={`/${locale === "en" ? "" : locale}`}
+          href="/"
           className="bg-white/10 hover:bg-white/20 transition-colors px-3 py-1.5 rounded-lg text-sm"
         >
           ← Back to Home

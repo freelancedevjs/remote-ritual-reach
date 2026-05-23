@@ -1,3 +1,5 @@
+export type RitualFee = { name: string; amount: number }
+
 export type Ritual = {
   id: string
   name: string
@@ -5,6 +7,7 @@ export type Ritual = {
   offerings: string
   duration: string
   price: number
+  fees?: RitualFee[]  // optional fee breakdown
   includes: string[]
   livestream: boolean
   source: string // price source — not shown on UI
@@ -54,6 +57,11 @@ export const places: Place[] = [
         offerings: "Water, milk, honey, ghee, Bilva leaves, flowers",
         duration: "45–90 minutes",
         price: 18,
+        fees: [
+          { name: "Sacred Offerings Procurement", amount: 4 },
+          { name: "Priest Coordination & Sankalpa Setup", amount: 3 },
+          { name: "Digital Delivery Package", amount: 3 },
+        ],
         includes: ["Full Rudrabhishek with 11 sacred items", "Sankalpa with your name & gotra", "Live WhatsApp video link", "Vibhuti (sacred ash) shipped by post"],
         livestream: true,
         source: "Official KV Puja List — Rudrabhishek (Video Conference, 1 Shastri): ₹700 plus service fee. shrikashivishwanath.org/frontend/home/poojaList"
@@ -65,6 +73,11 @@ export const places: Place[] = [
         offerings: "Water, milk, honey, ghee, Bilva leaves, flowers",
         duration: "90–120 minutes",
         price: 25,
+        fees: [
+          { name: "Multi-Priest Coordination Fee", amount: 4 },
+          { name: "Sacred Offerings Procurement", amount: 3 },
+          { name: "Digital Delivery Package", amount: 2 },
+        ],
         includes: ["Five Shastri priests perform the Rudrabhishek", "Sankalpa with your name & gotra", "Live WhatsApp video link", "Vibhuti and Gangajal shipped"],
         livestream: true,
         source: "Official KV Puja List — Rudrabhishek (Video Conference, 5 Shastri): ₹2,100 plus service fee. shrikashivishwanath.org/frontend/home/poojaList"
@@ -76,6 +89,13 @@ export const places: Place[] = [
         offerings: "Incense, flowers, lamps",
         duration: "15–20 minutes",
         price: 9,
+        fees: [
+          { name: "Auspicious Timeslot Reservation", amount: 5 },
+          { name: "Priest Coordination & Booking", amount: 4 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Prasad Packaging & Dispatch", amount: 5 },
+          { name: "Platform Service Fee", amount: 3 },
+        ],
         includes: ["Name announced at 3 AM Mangala Aarti", "Video of the ceremony sent within 6 hours", "Gangajal + prasad shipped"],
         livestream: true,
         source: "Official KV Mangala Aarti pass: ₹500 plus service fee. shrikashivishwanath.org"
@@ -87,6 +107,13 @@ export const places: Place[] = [
         offerings: "Flowers, lamps",
         duration: "20 minutes",
         price: 7,
+        fees: [
+          { name: "Auspicious Timeslot Reservation", amount: 5 },
+          { name: "Priest Coordination Fee", amount: 5 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Prasad Packaging & Dispatch", amount: 5 },
+          { name: "Platform Service Fee", amount: 4 },
+        ],
         includes: ["Name at Shringar Aarti", "Video proof", "Tilak powder shipped"],
         livestream: false,
         source: "Official KV Shringar/Bhog Aarti pass: ₹300 plus service fee. shrikashivishwanath.org"
@@ -98,6 +125,11 @@ export const places: Place[] = [
         offerings: "Rice balls (pinda), sesame, Gangajal, flowers",
         duration: "1.5–2 hours",
         price: 48,
+        fees: [
+          { name: "Sacred Offerings Procurement", amount: 3 },
+          { name: "Authorized Panda Coordination", amount: 3 },
+          { name: "Digital Documentation Package", amount: 2 },
+        ],
         includes: ["Full Pind Daan on Ganga ghat by authorized panda", "All ancestors' names chanted", "Video recording", "Gangajal shipped"],
         livestream: false,
         source: "Ghat panda authorized rate for full Pind Daan with materials: ₹2,500–₹3,500. SacredReach service fee added for authorized panda coordination and documentation."
@@ -130,6 +162,11 @@ export const places: Place[] = [
         offerings: "Tulsi, flowers",
         duration: "Included in daily seva cycle",
         price: 29,
+        fees: [
+          { name: "TTD Quota Booking Fee", amount: 4 },
+          { name: "International Prasad Packaging & Dispatch", amount: 5 },
+          { name: "Digital Documentation Package", amount: 3 },
+        ],
         includes: ["Archana with your name + 1 family name", "Digital photo of TTD receipt shared", "2 Tirupati laddus shipped internationally"],
         livestream: false,
         source: "TTD Archana (Nityotsavam): ₹220 plus service fee and shipping. arjithaseva.tirupatibalaji.ap.gov.in — booked via TTD quota system."
@@ -141,6 +178,11 @@ export const places: Place[] = [
         offerings: "Flowers, silk, sweets",
         duration: "1 seva session (~30 min)",
         price: 38,
+        fees: [
+          { name: "TTD Quota Booking Fee", amount: 4 },
+          { name: "International Prasad Packaging & Dispatch", amount: 4 },
+          { name: "Agent Coordination Fee", amount: 3 },
+        ],
         includes: ["Kalyanotsavam in your family's name", "Official TTD ticket receipt shared", "Prasad + tilak powder shipped"],
         livestream: false,
         source: "TTD Kalyanotsavam: ₹1,000 plus agent coordination fee. Booked via official TTD arjitha seva quota. ttdevasthanams.ap.gov.in"
@@ -152,6 +194,12 @@ export const places: Place[] = [
         offerings: "1,000 oil lamps, flowers",
         duration: "1 seva session",
         price: 12,
+        fees: [
+          { name: "TTD Quota Booking Fee", amount: 5 },
+          { name: "Prasad Packaging & International Dispatch", amount: 5 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Platform Service Fee", amount: 3 },
+        ],
         includes: ["Seva in your name via TTD quota", "Video/photo of the lamp ceremony", "Prasad shipped"],
         livestream: false,
         source: "TTD Sahasra Deepalankarana Seva: ₹200 plus service fee. ttdevasthanams.ap.gov.in"
@@ -163,6 +211,11 @@ export const places: Place[] = [
         offerings: "1 flower per name",
         duration: "2 hours",
         price: 24,
+        fees: [
+          { name: "Vedic Pujari Network Coordination", amount: 5 },
+          { name: "International Prasad Packaging & Dispatch", amount: 4 },
+          { name: "Digital Documentation Package", amount: 3 },
+        ],
         includes: ["1008 names chanted with your name and family", "Video clip of chanting", "Prasad + tulsi mala shipped"],
         livestream: false,
         source: "TTD-approved pujari arrangement at Tirumala for Sahasranama Archana: ₹1,100–₹1,500 plus service fee. Not in the public arjitha seva catalog; arranged via authorized Vedic pujari network."
@@ -195,6 +248,13 @@ export const places: Place[] = [
         offerings: "Flowers, incense",
         duration: "30 minutes",
         price: 9,
+        fees: [
+          { name: "Official Pass Procurement & Facilitation", amount: 5 },
+          { name: "Auspicious Timeslot Reservation", amount: 4 },
+          { name: "Udi Packaging & International Dispatch", amount: 5 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Platform Service Fee", amount: 3 },
+        ],
         includes: ["Official Shirdi Sansthan Kakad Aarti pass booked in your name", "Video of the aarti ceremony", "Udi (sacred ash) shipped by post"],
         livestream: true,
         source: "Shirdi Sai Sansthan official Kakad Aarti pass: ₹500–₹600. online.sai.org.in — bookable up to 60 days in advance."
@@ -206,6 +266,12 @@ export const places: Place[] = [
         offerings: "Milk, rose water, curd, honey, sugar",
         duration: "1 abhishek session",
         price: 17,
+        fees: [
+          { name: "Sansthan-Authorized Pujari Coordination", amount: 5 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Prasad Packaging & International Dispatch", amount: 4 },
+          { name: "Platform Service Fee", amount: 2 },
+        ],
         includes: ["Full abhishek video from the samadhi mandir", "Prasad from the Sansthan kitchen shipped", "Name board photo"],
         livestream: false,
         source: "Shirdi Sai Sansthan authorized pujari rate for Panchamrit Abhishek: ₹1,100–₹1,500. Arranged via Sansthan-linked karyakarta network. sai.org.in"
@@ -217,6 +283,12 @@ export const places: Place[] = [
         offerings: "Rose petals, incense",
         duration: "1 hour",
         price: 12,
+        fees: [
+          { name: "Representative Attendance Fee", amount: 5 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Udi & Prasad Packaging & Dispatch", amount: 5 },
+          { name: "Platform Service Fee", amount: 3 },
+        ],
         includes: ["Name in the evening palki procession", "Video of the procession", "Udi + prasad shipped"],
         livestream: false,
         source: "Evening palki is a free event at Shirdi Sai Sansthan; our representative attends and makes dedication. Arrangement fee: ₹500–₹800."
@@ -249,6 +321,12 @@ export const places: Place[] = [
         offerings: "Flowers, incense, bilva",
         duration: "1 hour",
         price: 18,
+        fees: [
+          { name: "BKTC Booking Coordination", amount: 4 },
+          { name: "High-Altitude Logistics Fee", amount: 5 },
+          { name: "Registered Post Prasad Dispatch", amount: 4 },
+          { name: "Digital Documentation Package", amount: 3 },
+        ],
         includes: ["Full Sahasranaam recitation at Kedarnath", "Video recording", "Atka Bhog prasad shipped via registered post"],
         livestream: false,
         source: "BKTC (Badrinath-Kedarnath Temple Committee) Shiv Sahasranaam Path: ₹2,000 plus service fee. Official online booking: badrinath-kedarnath.gov.in/online-services/book-puja-online/"
@@ -260,6 +338,11 @@ export const places: Place[] = [
         offerings: "Gangajal, milk, bilva, flowers",
         duration: "45–60 minutes",
         price: 52,
+        fees: [
+          { name: "BKTC Arrangement Fee", amount: 4 },
+          { name: "High-Altitude Logistics Fee", amount: 3 },
+          { name: "Digital Documentation Package", amount: 2 },
+        ],
         includes: ["Rudrabhishek at Kedarnath by temple priest", "Video + photos", "Atka Bhog prasad (registered post, ₹980)"],
         livestream: false,
         source: "BKTC non-attending puja arrangement. Atka Bhog (prasad) registered post: ₹1,270. Priest-arranged Rudrabhishek without attendance: ₹1,500–₹2,100 plus service fee. badrinath-kedarnath.gov.in"
@@ -271,6 +354,12 @@ export const places: Place[] = [
         offerings: "Incense, camphor, flowers, bilva",
         duration: "30 minutes",
         price: 18,
+        fees: [
+          { name: "BKTC Booking Coordination", amount: 4 },
+          { name: "High-Altitude Logistics Fee", amount: 4 },
+          { name: "Digital Documentation Package", amount: 3 },
+          { name: "Himalayan Rudraksha Packaging & Dispatch", amount: 4 },
+        ],
         includes: ["Name at morning aarti (Kapoor/Chandi Aarti)", "Aarti video", "Himalayan rudraksha shipped"],
         livestream: false,
         source: "BKTC Kapoor Aarti: ₹201; Chandi Aarti: ₹401 plus service fee for representative booking and documentation. badrinath-kedarnath.gov.in/online-services/book-puja-online/"
@@ -303,6 +392,12 @@ export const places: Place[] = [
         offerings: "Full hawan samagri (supplied by Shrine Board)",
         duration: "1 hawan session",
         price: 28,
+        fees: [
+          { name: "Shrine Board Registration Facilitation", amount: 4 },
+          { name: "Sacred Materials Procurement", amount: 3 },
+          { name: "Digital Documentation Package", amount: 3 },
+          { name: "Prasad Packaging & International Dispatch", amount: 4 },
+        ],
         includes: ["Official Shrine Board Hawan registration (₹2,100)", "Video of the hawan", "Prasad + vermilion shipped"],
         livestream: false,
         source: "Vaishno Devi Shrine Board official Hawan Puja: ₹2,100. online.maavaishnodevi.org — the Board explicitly warns against third-party agents."
@@ -314,6 +409,11 @@ export const places: Place[] = [
         offerings: "Red chunri, coconut, flowers",
         duration: "2-day trek",
         price: 65,
+        fees: [
+          { name: "Trekker Documentation & Coordination", amount: 4 },
+          { name: "Shrine Board Permit Facilitation", amount: 3 },
+          { name: "Digital Documentation Package", amount: 2 },
+        ],
         includes: ["Full 14-km trek + cave darshan by our representative", "Chunri placed at pindies in your name", "Video during darshan", "Blessed vermilion + prasad shipped"],
         livestream: false,
         source: "Shrine Board permits authorized guide hire. Trekker + chunri materials: ₹3,000–₹5,000. Guide registration via maavaishnodevi.org."
@@ -325,6 +425,11 @@ export const places: Place[] = [
         offerings: "Full puja samagri, hawan kund",
         duration: "1 hawan session",
         price: 55,
+        fees: [
+          { name: "Peak-Season Coordination Surcharge", amount: 4 },
+          { name: "Sacred Materials Procurement", amount: 3 },
+          { name: "Digital Documentation Package", amount: 2 },
+        ],
         includes: ["Navratri special Hawan at shrine premises", "Video", "Full prasad kit (vermilion, chunri, prasad) shipped"],
         livestream: false,
         source: "Shrine Board Navratri Hawan: ₹2,100 base + peak-season surcharge. online.maavaishnodevi.org — Navratri surcharge can add ₹21,000+ for SSVP puja; Hawan remains standard."
@@ -357,6 +462,13 @@ export const places: Place[] = [
         offerings: "Sacred bhasma (fresh cremation ash)",
         duration: "1 hour",
         price: 6,
+        fees: [
+          { name: "Online Pass Procurement & Facilitation", amount: 5 },
+          { name: "Auspicious Timeslot Reservation", amount: 5 },
+          { name: "Representative Attendance Fee", amount: 5 },
+          { name: "Digital Documentation Package", amount: 5 },
+          { name: "Sacred Bhasma Packaging & Dispatch", amount: 5 },
+        ],
         includes: ["Online pass booked (₹200)", "Full aarti video sent within 6 hours", "Sacred bhasma (ash) shipped"],
         livestream: false,
         source: "Mahakaleshwar official Bhasma Aarti online pass: ₹200. mahakaleshwar.nic.in — passes open 30 days in advance; highly competitive."
@@ -368,6 +480,12 @@ export const places: Place[] = [
         offerings: "Milk, honey, ghee, bilva, Gangajal",
         duration: "2 hours",
         price: 14,
+        fees: [
+          { name: "Sacred Offerings Procurement", amount: 5 },
+          { name: "Priest Coordination & Booking", amount: 4 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Rudraksha & Prasad Packaging & Dispatch", amount: 4 },
+        ],
         includes: ["Full 11-avartan Rudrabhishek at Mahakaleshwar", "Video", "Prasad + rudraksha shipped"],
         livestream: false,
         source: "Mahakaleshwar Temple Rudrabhishek (11 Avartan): ₹1,000. shrimahakaleshwar.com / shrimahakaleshwar.mp.gov.in"
@@ -379,6 +497,13 @@ export const places: Place[] = [
         offerings: "Sweets, fruits, flowers, incense",
         duration: "30 minutes",
         price: 5,
+        fees: [
+          { name: "Sacred Offerings Procurement", amount: 5 },
+          { name: "Representative Attendance Fee", amount: 5 },
+          { name: "Priest Coordination Fee", amount: 5 },
+          { name: "Digital Documentation Package", amount: 5 },
+          { name: "Blessed Tilak & Prasad Packaging & Dispatch", amount: 5 },
+        ],
         includes: ["Offering in your name", "Photo proof", "Blessed tilak + prasad shipped"],
         livestream: false,
         source: "Mahakaleshwar General Archana: ₹100; Rudrabhishek (1 Avartan): ₹300. shrimahakaleshwar.com"
@@ -411,6 +536,11 @@ export const places: Place[] = [
         offerings: "56 varieties of food (Chhappan Bhog)",
         duration: "1 day",
         price: 28,
+        fees: [
+          { name: "Authorized Sevayet Coordination", amount: 4 },
+          { name: "Digital Documentation Package", amount: 3 },
+          { name: "Mahaprasad Packaging & Dispatch", amount: 4 },
+        ],
         includes: ["Chhappan Bhog offered via authorized panda/sevayet", "Photo from inside Ananda Bazaar", "Mahaprasad packed and shipped"],
         livestream: false,
         source: "Jagannath Temple Administration explicitly states no online donation accepted for pujas (shreejagannatha.in). Must use authorized sevayet system. Mahaprasad plate: ₹100–₹200 at Ananda Bazaar. Full sevayet arrangement: ₹2,000–₹2,500."
@@ -422,6 +552,11 @@ export const places: Place[] = [
         offerings: "Lamps, flowers",
         duration: "30 minutes",
         price: 22,
+        fees: [
+          { name: "Authorized Sevayet Coordination", amount: 4 },
+          { name: "Digital Documentation Package", amount: 3 },
+          { name: "Prasad Packaging & International Dispatch", amount: 3 },
+        ],
         includes: ["Aarti dedication through registered sevayet", "Video recording", "Tilak + prasad shipped"],
         livestream: false,
         source: "Authorized sevayet arrangement at Jagannath Puri. Temple forbids online puja payment — sevayet system is the only valid remote method. shreejagannatha.in"
@@ -454,6 +589,13 @@ export const places: Place[] = [
         offerings: "Tulsi, flowers",
         duration: "1 hour",
         price: 10,
+        fees: [
+          { name: "BKTC Booking Coordination", amount: 5 },
+          { name: "High-Altitude Logistics Fee", amount: 5 },
+          { name: "Prasad Packaging & International Dispatch", amount: 4 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Platform Service Fee", amount: 3 },
+        ],
         includes: ["Full Vishnusahasranama recitation in your name", "Video", "Char Dham prasad + tilak shipped"],
         livestream: false,
         source: "BKTC Vishnusahasranam Path: ₹701. badrinath-kedarnath.gov.in/online-services/book-puja-online/"
@@ -465,6 +607,13 @@ export const places: Place[] = [
         offerings: "Ghee lamp",
         duration: "20 minutes",
         price: 7,
+        fees: [
+          { name: "BKTC Booking Coordination", amount: 5 },
+          { name: "Representative Attendance Fee", amount: 5 },
+          { name: "Digital Documentation Package", amount: 5 },
+          { name: "Prasad Packaging & Dispatch", amount: 4 },
+          { name: "Platform Service Fee", amount: 4 },
+        ],
         includes: ["Name at Swaran Aarti (BKTC booking ₹501)", "Video", "Prasad sent"],
         livestream: false,
         source: "BKTC Swaran Aarti: ₹501. badrinath-kedarnath.gov.in/online-services/book-puja-online/"
@@ -476,6 +625,11 @@ export const places: Place[] = [
         offerings: "Tapt Kund water, yogurt, Tulsi, flowers",
         duration: "30 minutes",
         price: 57,
+        fees: [
+          { name: "BKTC Booking Coordination", amount: 4 },
+          { name: "Registered Prasad Post Facilitation", amount: 3 },
+          { name: "Digital Documentation Package", amount: 2 },
+        ],
         includes: ["Abhishek at Badrinath via BKTC official booking (₹4,500)", "Video", "Atka Bhog prasad shipped by registered post"],
         livestream: false,
         source: "BKTC Abhishek Puja (attending, 4:30–6:30 AM): ₹4,500. Non-attending arrangements possible via BKTC-linked priest. badrinath-kedarnath.gov.in"
@@ -508,6 +662,12 @@ export const places: Place[] = [
         offerings: "Sweets, fruits, Tulsi, Panchamrit",
         duration: "1 bhog slot",
         price: 12,
+        fees: [
+          { name: "Pushtimarg Seva Coordination", amount: 5 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Prasad Packaging & International Dispatch", amount: 5 },
+          { name: "Platform Service Fee", amount: 4 },
+        ],
         includes: ["Individual bhog in your name", "Photo from temple seva book", "Prasad shipped"],
         livestream: false,
         source: "Dwarkadhish Temple Individual Bhog: ₹701 minimum. dwarkadhish.org seva section."
@@ -519,6 +679,11 @@ export const places: Place[] = [
         offerings: "Four rounds: sweets, rice, fruits, incense + lamps",
         duration: "Evening aarti block (~2 hours)",
         price: 89,
+        fees: [
+          { name: "Pushtimarg Seva Coordination", amount: 4 },
+          { name: "Digital Documentation Package", amount: 3 },
+          { name: "Blessed Items Packaging & Dispatch", amount: 3 },
+        ],
         includes: ["All 4 evening bhogs in your name", "Video of the seva", "Peacock feather + blessed items shipped"],
         livestream: false,
         source: "Dwarkadhish Evening 4-Bhog Combo: ₹7,001. dwarkadhish.org — temple Pushtimarg seva system."
@@ -553,6 +718,12 @@ export const places: Place[] = [
         offerings: "Karah Prasad (sacred halwa)",
         duration: "1 day",
         price: 14,
+        fees: [
+          { name: "SGPC Granthi Coordination", amount: 5 },
+          { name: "Karah Prasad Offering Fee", amount: 4 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Prasad Packaging & International Dispatch", amount: 4 },
+        ],
         includes: ["Personal Ardas at Akal Takht with full family names", "Video of Ardas", "Hukamnama (divine message) photographed and sent", "Karah Prasad seva receipt"],
         livestream: true,
         source: "SGPC Ardas is donation-based; no fixed rate. Standard Karah Prasad offering: ₹101–₹501. Arranged via SGPC Granthi at Harmandir Sahib. sgpc.net"
@@ -564,6 +735,11 @@ export const places: Place[] = [
         offerings: "Langar ingredients: dal, roti, vegetables",
         duration: "1 day",
         price: 35,
+        fees: [
+          { name: "Langar Coordination & Admin Fee", amount: 4 },
+          { name: "Seva Certificate Processing", amount: 3 },
+          { name: "Digital Documentation Package", amount: 3 },
+        ],
         includes: ["Langar served in your family's name", "Photo + video of the langar hall", "Certificate of Seva"],
         livestream: false,
         source: "SGPC langar sponsorship: ₹1,000–₹5,000 sponsors approximately 50 meals (₹20–₹30/meal). Confirmed via SGPC UK donation portal. sgpcuk.com/booking"
@@ -575,6 +751,13 @@ export const places: Place[] = [
         offerings: "",
         duration: "1 morning",
         price: 9,
+        fees: [
+          { name: "SGPC Granthi Coordination", amount: 5 },
+          { name: "Karah Prasad Procurement", amount: 4 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "International WhatsApp Delivery", amount: 4 },
+          { name: "Platform Service Fee", amount: 4 },
+        ],
         includes: ["Morning Hukamnama photo sent to WhatsApp", "Granthi's Ardas for your intention", "Your name in daily prayer"],
         livestream: false,
         source: "SGPC Hukamnama is free and publicly broadcast. Small seva for personal Ardas: ₹101 Karah Prasad. sgpc.net"
@@ -586,6 +769,11 @@ export const places: Place[] = [
         offerings: "Karah Prasad, rumalas (coverings)",
         duration: "48 hours",
         price: 52,
+        fees: [
+          { name: "SGPC Registration Facilitation", amount: 4 },
+          { name: "Certificate Processing Fee", amount: 3 },
+          { name: "Video Highlights Compilation", amount: 3 },
+        ],
         includes: ["48-hour scripture reading — SGPC registration ₹4,100", "Family names read throughout", "Certificate + video highlights", "WhatsApp livestream link"],
         livestream: true,
         source: "SGPC official Akhand Path sewa: ₹4,100. Wait list at SGPC Amritsar exceeds 1.3 lakh bookings (~10+ year wait). Available at affiliated gurdwaras via SGPC UK (shorter wait). sgpcuk.com/booking"
@@ -618,6 +806,11 @@ export const places: Place[] = [
         offerings: "Karah Prasad",
         duration: "1 full trek day",
         price: 28,
+        fees: [
+          { name: "High-Altitude Trek Coordination", amount: 5 },
+          { name: "Guide Hire Facilitation", amount: 4 },
+          { name: "Digital Documentation Package", amount: 3 },
+        ],
         includes: ["Ardas at the lake shrine in your name", "Trek video from the high-altitude gurdwara", "Sacred glacial jal (water) shipped"],
         livestream: false,
         source: "Hemkund Sahib SGPC gurdwara is free to visit. Trek guide hire for high-altitude route: ₹1,500–₹2,500/day. Our representative treks and documents. SGPC-managed site."
@@ -629,6 +822,11 @@ export const places: Place[] = [
         offerings: "",
         duration: "1 trek day",
         price: 35,
+        fees: [
+          { name: "High-Altitude Trek Coordination", amount: 5 },
+          { name: "Guide Hire Facilitation", amount: 4 },
+          { name: "Digital Documentation Package", amount: 3 },
+        ],
         includes: ["Ishnaan performed in your name at the glacial lake", "Video of the lake and the ishnaan", "Blessed water + prasad shipped"],
         livestream: false,
         source: "SGPC manages Hemkund Sahib. Ishnaan (bath) at the glacial sarovar is free. Trek + guide hire: ₹1,500–₹3,000. Ishnaan video documentation by our guide."
@@ -663,6 +861,12 @@ export const places: Place[] = [
         offerings: "Cotton chaddar, rose petals, attar",
         duration: "1 day",
         price: 18,
+        fees: [
+          { name: "Khadim Family Coordination", amount: 5 },
+          { name: "Sacred Offerings Procurement", amount: 4 },
+          { name: "Digital Documentation Package", amount: 3 },
+          { name: "Tabaruk Packaging & International Dispatch", amount: 3 },
+        ],
         includes: ["Cotton chaddar placed at mazaar (₹1,100–₹2,500 range)", "Fatiha recited by Khadim in your name", "Video + photos from the dargah", "Tabaruk (blessed sweets) shipped"],
         livestream: false,
         source: "Ajmer Sharif cotton chaddar: ₹1,100–₹2,500 depending on quality. Online via syedajmersharif.com and ajmerdargah.in — both accept PayPal/Stripe. Gaddi Nasheen representative places it."
@@ -674,6 +878,11 @@ export const places: Place[] = [
         offerings: "Silk/velvet embroidered chaddar, rose petals, itar",
         duration: "1 day",
         price: 75,
+        fees: [
+          { name: "Khadim Family Coordination", amount: 4 },
+          { name: "Digital Documentation Package", amount: 3 },
+          { name: "Tabaruk Packaging & Dispatch", amount: 3 },
+        ],
         includes: ["Premium silk chaddar (₹5,000–₹6,000)", "Placed at main mazaar by Khadim", "Video + photo confirmation", "Tabaruk shipped"],
         livestream: false,
         source: "Ajmer Sharif embroidered silk chaddar: ₹5,000–₹11,000. syedajmersharif.com chadar complete price guide."
@@ -685,6 +894,12 @@ export const places: Place[] = [
         offerings: "Rose petals, attar",
         duration: "1 day",
         price: 13,
+        fees: [
+          { name: "Khadim Coordination Fee", amount: 5 },
+          { name: "Sacred Offerings Procurement", amount: 4 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Platform Service Fee", amount: 4 },
+        ],
         includes: ["Fatiha at the mazaar with your name and mannat", "Personal dua with your specific wish", "Video proof from inside the dargah"],
         livestream: false,
         source: "Khadim Fatiha + personal mannat dua: ₹500–₹1,000. Authorized Khadim families at Ajmer Sharif. ajmerdargah.in"
@@ -696,6 +911,11 @@ export const places: Place[] = [
         offerings: "Chaddar, rose petals, dates, itar",
         duration: "Urs week (6 days, month of Rajab)",
         price: 90,
+        fees: [
+          { name: "Peak-Season Facilitation Surcharge", amount: 4 },
+          { name: "Digital Documentation Package", amount: 3 },
+          { name: "Tabaruk Packaging & Dispatch", amount: 3 },
+        ],
         includes: ["Urs-week chaddar at the mazaar", "Participation video during Urs", "Dates + tabaruk shipped"],
         livestream: false,
         source: "Urs-period chaddar premium: ₹5,000–₹8,000 (surcharge over regular rates during Urs week). syedajmersharif.com"
@@ -728,6 +948,11 @@ export const places: Place[] = [
         offerings: "Chadar, rose petals, attar",
         duration: "1 day",
         price: 22,
+        fees: [
+          { name: "Local Partner Facilitation Fee", amount: 4 },
+          { name: "Digital Documentation Package", amount: 3 },
+          { name: "Tabaruk Packaging & Dispatch", amount: 3 },
+        ],
         includes: ["Chadar placed at Data Sahib's mazaar", "Fatiha recited in your name", "Video proof from the dargah", "Tabaruk shipped"],
         livestream: false,
         source: "Data Darbar managed by Punjab Auqaf Dept (auqaf.punjab.gov.pk) — no commercial online chadar booking via government. Our Lahore partner facilitates. Chadar cost: PKR 1,500–3,000 (~$5–10) + service fee."
@@ -739,6 +964,11 @@ export const places: Place[] = [
         offerings: "Flowers, rose water, incense",
         duration: "1 day",
         price: 18,
+        fees: [
+          { name: "Local Partner Coordination", amount: 5 },
+          { name: "Sacred Offerings Procurement", amount: 4 },
+          { name: "Digital Documentation Package", amount: 4 },
+        ],
         includes: ["Mannat presented at Data Sahib's mazaar", "Fatiha + dua on your behalf", "Photo proof from inside the dargah"],
         livestream: false,
         source: "No official booking system for Data Darbar. Khadim dua arrangement: PKR 1,000–2,000 (~$4–7). Auqaf-supervised site. auqaf.punjab.gov.pk"
@@ -750,6 +980,12 @@ export const places: Place[] = [
         offerings: "Rose petals",
         duration: "1 night",
         price: 14,
+        fees: [
+          { name: "Representative Attendance Fee", amount: 5 },
+          { name: "Digital Documentation Package", amount: 5 },
+          { name: "Rose Water Packaging & Dispatch", amount: 4 },
+          { name: "Platform Service Fee", amount: 3 },
+        ],
         includes: ["Name in Thursday mehfil at Data Darbar", "Audio/video clip from the gathering", "Blessed rose water shipped"],
         livestream: false,
         source: "Thursday mehfil at Data Darbar is free to all. Our representative attends and makes dedication. Arrangement fee: PKR 500–1,000 (~$2–4)."
@@ -782,6 +1018,12 @@ export const places: Place[] = [
         offerings: "Rose petals, incense",
         duration: "1 night (~6–9 PM)",
         price: 16,
+        fees: [
+          { name: "Representative Attendance Fee", amount: 5 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Blessed Items Packaging & Dispatch", amount: 4 },
+          { name: "Platform Service Fee", amount: 3 },
+        ],
         includes: ["Name in Thursday qawwali at Hazrat Nizamuddin", "Video recording of the session", "Blessed rose petals + tabaruk shipped"],
         livestream: false,
         source: "Thursday qawwali at Nizamuddin is free to all. nizamuddinaulia.org accepts flexible online donations for chadar, flowers, langar. Our arrangement includes representative + documentation."
@@ -793,6 +1035,11 @@ export const places: Place[] = [
         offerings: "Chadar (₹1,500 range), fresh roses",
         duration: "1 day",
         price: 22,
+        fees: [
+          { name: "Khadim Coordination Fee", amount: 4 },
+          { name: "Digital Documentation Package", amount: 3 },
+          { name: "Platform Service Fee", amount: 3 },
+        ],
         includes: ["Chadar + rose offering at the mazaar", "Fatiha recited by Khadim", "Photo with your dedication"],
         livestream: false,
         source: "Nizamuddin chadar from lane vendors: ₹500–₹5,000. Our representative arranges ₹1,500 chadar + Khadim Fatiha. nizamuddinaulia.org donation portal (flexible amount)."
@@ -804,6 +1051,12 @@ export const places: Place[] = [
         offerings: "Fresh flowers, incense",
         duration: "1 day",
         price: 13,
+        fees: [
+          { name: "Khadim Coordination Fee", amount: 5 },
+          { name: "Sacred Offerings Procurement", amount: 4 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Tabaruk Packaging & Dispatch", amount: 5 },
+        ],
         includes: ["Fatiha at Hazrat Nizamuddin's mazaar", "Personal dua for your intention", "Video proof", "Blessed tabaruk shipped"],
         livestream: false,
         source: "Nizamuddin Khadim Fatiha: ₹300–₹700 typical. nizamuddinaulia.org accepts online donations. Nizami family (hereditary managers) do not have a fixed price list."
@@ -838,6 +1091,13 @@ export const places: Place[] = [
         offerings: "Candle, flowers",
         duration: "1 day",
         price: 9,
+        fees: [
+          { name: "Local Representative Fee", amount: 5 },
+          { name: "Sacred Items Procurement", amount: 5 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Blessed Medal Packaging & International Dispatch", amount: 5 },
+          { name: "Platform Service Fee", amount: 3 },
+        ],
         includes: ["Candle lit at Our Lady's feet", "Your intention prayed aloud", "Photo of lit candle", "Blessed miraculous medal shipped"],
         livestream: false,
         source: "Velankanni candle offering: ₹20–₹500 at the Offering Centre. Contact: info@vailankannishrine.net / +91-4365-263540. vailankannishrine.net"
@@ -849,6 +1109,12 @@ export const places: Place[] = [
         offerings: "Candles, flowers",
         duration: "9 days",
         price: 18,
+        fees: [
+          { name: "Parish Coordination Fee", amount: 5 },
+          { name: "9-Day Daily Update Service", amount: 3 },
+          { name: "Novena Booklet & Medal Dispatch", amount: 4 },
+          { name: "Digital Documentation Package", amount: 3 },
+        ],
         includes: ["Name in 9-day novena at the Basilica", "Daily WhatsApp updates", "Novena booklet + blessed miraculous medal shipped"],
         livestream: false,
         source: "Velankanni novena: contact shrine directly. Mass intention per day: ₹50 (weekday) – ₹100 (Sunday/feast day) at affiliated Velankanni shrines. 9-day = ₹450–₹900 total. vailankannishrine.net"
@@ -860,6 +1126,12 @@ export const places: Place[] = [
         offerings: "Candles",
         duration: "1 hour",
         price: 13,
+        fees: [
+          { name: "Parish Coordination Fee", amount: 5 },
+          { name: "Mass Card Processing", amount: 4 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Blessed Medal Packaging & Dispatch", amount: 5 },
+        ],
         includes: ["Mass offered for your intention", "Mass card (photo sent)", "Video of Mass from our representative", "Blessed miraculous medal shipped"],
         livestream: false,
         source: "Velankanni mass intention: ₹50–₹150. Regional Catholic shrine standard rate. Arrange via info@vailankannishrine.net or +91-4365-263540. vailankannishrine.net"
@@ -871,6 +1143,12 @@ export const places: Place[] = [
         offerings: "Votive lamp, flowers",
         duration: "1 day",
         price: 12,
+        fees: [
+          { name: "Local Representative Fee", amount: 5 },
+          { name: "Sacred Items Procurement", amount: 4 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Blessed Rosary Packaging & Dispatch", amount: 5 },
+        ],
         includes: ["Thanksgiving votive placed in your name at Offering Centre", "Photo from the shrine", "Blessed rosary shipped"],
         livestream: false,
         source: "Votive offerings at Velankanni Offering Centre: ₹100–₹500. vailankannishrine.net"
@@ -903,6 +1181,13 @@ export const places: Place[] = [
         offerings: "Candles, flowers",
         duration: "1 hour",
         price: 11,
+        fees: [
+          { name: "Parish Coordination Fee", amount: 5 },
+          { name: "Mass Card Processing", amount: 5 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Blessed Medal Packaging & Dispatch", amount: 5 },
+          { name: "Platform Service Fee", amount: 3 },
+        ],
         includes: ["Mass for your intention at this UNESCO site", "Mass card (photo)", "Video from our Goa representative", "Blessed St. Francis Xavier medal shipped"],
         livestream: false,
         source: "Bom Jesus mass intention: ₹50–₹150. Confirmed by visitor accounts; sacristy registration in person or by phone. No official online booking system."
@@ -914,6 +1199,13 @@ export const places: Place[] = [
         offerings: "Candle",
         duration: "1 day",
         price: 9,
+        fees: [
+          { name: "UNESCO Heritage Site Access Fee", amount: 5 },
+          { name: "Local Representative Fee", amount: 5 },
+          { name: "Digital Documentation Package", amount: 5 },
+          { name: "Blessed Medal Packaging & Dispatch", amount: 5 },
+          { name: "Platform Service Fee", amount: 3 },
+        ],
         includes: ["Candle lit before the incorrupt relics", "Photo with relic chapel visible", "Blessed St. Francis Xavier medal shipped"],
         livestream: false,
         source: "Candle at Bom Jesus Relic Chapel: ₹50–₹150 depending on candle size. Arranged by our Goa representative. No official booking system exists."
@@ -948,6 +1240,13 @@ export const places: Place[] = [
         offerings: "Oil lamp, marigold flowers",
         duration: "1 evening",
         price: 8,
+        fees: [
+          { name: "Monastery Coordination Fee", amount: 5 },
+          { name: "Sacred Items Procurement", amount: 5 },
+          { name: "Digital Documentation Package", amount: 5 },
+          { name: "Blessed Bodhi Leaf & Incense Dispatch", amount: 5 },
+          { name: "Platform Service Fee", amount: 3 },
+        ],
         includes: ["Lamp lit at the Bodhi tree", "Photo proof with tree visible", "Blessed Bodhi leaf + incense shipped"],
         livestream: false,
         source: "Mahabodhi Temple entry: free. Oil lamp from market stalls: ₹20–₹200. Monk arranges and photographs for ₹200–₹500 dana. bodhgayatemple.com — no official puja booking system."
@@ -959,6 +1258,12 @@ export const places: Place[] = [
         offerings: "Flowers, candles, incense",
         duration: "30 minutes",
         price: 12,
+        fees: [
+          { name: "Monastery Coordination Fee", amount: 5 },
+          { name: "Sacred Items Procurement", amount: 5 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Blessed Bodhi Leaf Packaging & Dispatch", amount: 5 },
+        ],
         includes: ["Pradakshina by resident monk in your name", "Video at the Bodhi tree", "Blessed Bodhi leaf shipped"],
         livestream: false,
         source: "Mahabodhi Temple entry free. Monk-arranged puja/pradakshina: ₹500–₹1,000 dana. bodhgayatemple.com — the BTMC has no individual puja booking; arranged via resident monasteries."
@@ -970,6 +1275,11 @@ export const places: Place[] = [
         offerings: "",
         duration: "1 hour",
         price: 28,
+        fees: [
+          { name: "Monastery Coordination Fee", amount: 4 },
+          { name: "Merit Dedication Certificate", amount: 3 },
+          { name: "Digital Documentation Package", amount: 3 },
+        ],
         includes: ["1-hour seated meditation at Vajrasana in your name", "Video of the session at Diamond Throne", "Merit dedication certificate from the monastery"],
         livestream: false,
         source: "Resident monasteries (Tibetan, Thai, Burmese) arrange dedicated meditations for donors. Typical dana: ₹1,500–₹2,500 for 1-hour dedicated meditation. FPMT and similar org rates confirmed."
@@ -1004,6 +1314,11 @@ export const places: Place[] = [
         offerings: "Milk, saffron water, sandalwood paste, flowers",
         duration: "30–45 minutes",
         price: 32,
+        fees: [
+          { name: "Pujari Climb Coordination", amount: 4 },
+          { name: "Sacred Offerings Procurement", amount: 3 },
+          { name: "Digital Documentation Package", amount: 3 },
+        ],
         includes: ["Snatra Puja at main Adinath temple by authorized pujari", "Full video including the climb", "Blessed saffron + sandalwood shipped"],
         livestream: false,
         source: "Jain pujari arrangement at Palitana: ₹1,500–₹3,000 for full Snatra Puja including climb. No government booking system — organized via Shatrunjaya temple pujari association."
@@ -1015,6 +1330,11 @@ export const places: Place[] = [
         offerings: "",
         duration: "45 minutes",
         price: 18,
+        fees: [
+          { name: "Pujari Coordination & Booking", amount: 5 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Navkar Mala Packaging & Dispatch", amount: 5 },
+        ],
         includes: ["108 Navkar Mantra in your name at the temple", "Video", "Jain prayer mala (navkar mala) shipped"],
         livestream: false,
         source: "Jain pujari arrangement at Palitana for 108 Navkar Mantra recitation: ₹500–₹1,500 depending on priest and count."
@@ -1049,6 +1369,11 @@ export const places: Place[] = [
         offerings: "",
         duration: "1 hour at samadhi",
         price: 29,
+        fees: [
+          { name: "Resort Pass Procurement", amount: 4 },
+          { name: "Digital Documentation Package", amount: 3 },
+          { name: "Signed Photo Card Processing", amount: 3 },
+        ],
         includes: ["1-day resort entry pass at official international rate (₹2,050)", "1-hour silent meditation at Osho's samadhi", "Video of the Samadhi Hall", "Signed photo card of the session"],
         livestream: false,
         source: "Osho Resort 1-Day Entry Pass: ₹2,050 (international visitors) / ₹1,050 (Indian nationals). osho.com/osho-meditation-resort/rates-offers/seasonal-rates"
@@ -1060,6 +1385,11 @@ export const places: Place[] = [
         offerings: "",
         duration: "1 hour x 3 days",
         price: 68,
+        fees: [
+          { name: "Resort Pass Procurement", amount: 4 },
+          { name: "Digital Documentation Package", amount: 3 },
+          { name: "Digital Music Album Delivery", amount: 2 },
+        ],
         includes: ["3-day resort pass at official international rate (₹5,200)", "Dynamic Meditation in your name for 3 mornings", "Daily video updates via WhatsApp", "Osho meditation music album (digital link)"],
         livestream: false,
         source: "Osho Resort 3-Day Entry Pass: ₹5,200 (international) / ₹2,650 (Indian). osho.com/osho-meditation-resort/rates-offers/seasonal-rates"
@@ -1092,6 +1422,12 @@ export const places: Place[] = [
         offerings: "Flowers",
         duration: "1 full darshan day",
         price: 19,
+        fees: [
+          { name: "Representative Attendance Fee", amount: 5 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Prasad Packaging & International Dispatch", amount: 4 },
+          { name: "Platform Service Fee", amount: 2 },
+        ],
         includes: ["Dedicated prayer during Amma's darshan program", "Video of the ashram and darshan hall", "Blessed prasad from Amma's kitchen shipped"],
         livestream: true,
         source: "Amritapuri Ashram entry: free. Amma's darshan: free. Accommodation (if needed for timing): ₹600/night international. amritapuri.org/ashram/faq — our representative attends and documents."
@@ -1103,6 +1439,11 @@ export const places: Place[] = [
         offerings: "Flowers, coconut",
         duration: "1 full night event",
         price: 38,
+        fees: [
+          { name: "Special Event Coordination Fee", amount: 4 },
+          { name: "Digital Documentation Package", amount: 3 },
+          { name: "Kumkum & Prasad Packaging & Dispatch", amount: 3 },
+        ],
         includes: ["Name offered at Devi Bhava program", "Video of the event atmosphere", "Kumkum + prasad from the event shipped"],
         livestream: false,
         source: "Devi Bhava programs at Amritapuri: free entry, no ticket. Our representative attends, dedicates prayers, and documents. Accommodation if overnight: ₹600/night. amritapuri.org for schedule."
@@ -1135,6 +1476,11 @@ export const places: Place[] = [
         offerings: "Ghee lamps, flowers, incense",
         duration: "45 minutes",
         price: 44,
+        fees: [
+          { name: "ISKCON Booking Coordination", amount: 3 },
+          { name: "Digital Documentation Package", amount: 3 },
+          { name: "Tulsi & Prasad Packaging & Dispatch", amount: 3 },
+        ],
         includes: ["Sandhya Aarti seva in your name (official rate: ₹3,501)", "Video of the aarti sent to WhatsApp", "Tulsi + prasad shipped"],
         livestream: false,
         source: "ISKCON Vrindavan Sandhya Aarti Seva: ₹3,501. iskconvrindavandonation.com/daily-seva"
@@ -1146,6 +1492,11 @@ export const places: Place[] = [
         offerings: "Panchamrit (5 sacred liquids), flowers, Tulsi",
         duration: "45 minutes",
         price: 62,
+        fees: [
+          { name: "ISKCON Booking Coordination", amount: 3 },
+          { name: "Digital Documentation Package", amount: 3 },
+          { name: "Tulsi Mala & Prasad Packaging & Dispatch", amount: 3 },
+        ],
         includes: ["Abhishek at one of three altars in your name (official rate: ₹5,000)", "Full abhishek video", "Tulsi mala + prasad shipped"],
         livestream: false,
         source: "ISKCON Vrindavan Vigraha Abhishek (1 altar): ₹5,000. iskconvrindavandonation.com/vigraha-seva"
@@ -1157,6 +1508,12 @@ export const places: Place[] = [
         offerings: "",
         duration: "2 hours",
         price: 16,
+        fees: [
+          { name: "Devotee Network Coordination", amount: 5 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Tulsi Mala Packaging & Dispatch", amount: 5 },
+          { name: "Platform Service Fee", amount: 3 },
+        ],
         includes: ["10,000 Hare Krishna Maha-Mantra in your name", "Video of chanting session", "Tulsi mala (japa beads) shipped"],
         livestream: false,
         source: "Not an official ISKCON catalog item; arranged via Vrindavan devotee network. Standard rate for 10,000 japa dedication: ₹1,000–₹1,500."
@@ -1189,6 +1546,12 @@ export const places: Place[] = [
         offerings: "Flowers, incense, prasad",
         duration: "1 day",
         price: 14,
+        fees: [
+          { name: "Math Office Coordination", amount: 5 },
+          { name: "Digital Documentation Package", amount: 4 },
+          { name: "Prasad Packaging & International Dispatch", amount: 5 },
+          { name: "Platform Service Fee", amount: 3 },
+        ],
         includes: ["Name in Thakur Puja at Belur Math", "Video or photo of the dedication sent", "Prasad from the shrine kitchen shipped"],
         livestream: false,
         source: "Belur Math online donation minimum: ₹100 (any purpose). Permanent Fund minimum: ₹5,000. Specific puja dedication arranged via math office. donations.belurmath.org — entry to math is free."

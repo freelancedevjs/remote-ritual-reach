@@ -2,7 +2,7 @@ import { notFound } from "next/navigation"
 import { gurus } from "@/lib/gurus-data"
 import { places } from "@/lib/places-data"
 import { Link } from "@/i18n/navigation"
-import { getTranslations } from "next-intl/server"
+import { getTranslations, setRequestLocale } from "next-intl/server"
 import { routing } from "@/i18n/routing"
 import LanguageSwitcher from "@/components/LanguageSwitcher"
 import ScrollReveal from "@/components/ScrollReveal"
@@ -47,6 +47,7 @@ function SacredMandala({ className = "" }: { className?: string }) {
 
 export default async function GuruPage({ params }: { params: Promise<{ slug: string; locale: string }> }) {
   const { slug, locale } = await params
+  setRequestLocale(locale)
   const guru = gurus.find(g => g.slug === slug)
   if (!guru) notFound()
 

@@ -9,5 +9,6 @@ export const routing = defineRouting({
     'ms', 'id',
   ],
   defaultLocale: 'en',
-  localePrefix: 'as-needed',
+  // 'always' is required for static export — no server means no locale detection/redirect
+  localePrefix: 'always',
 })

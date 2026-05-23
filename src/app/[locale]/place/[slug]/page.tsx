@@ -3,7 +3,7 @@ import { places } from "@/lib/places-data"
 import BookingForm from "@/components/BookingForm"
 import ScrollReveal from "@/components/ScrollReveal"
 import { Link } from "@/i18n/navigation"
-import { getTranslations } from "next-intl/server"
+import { getTranslations, setRequestLocale } from "next-intl/server"
 import { routing } from "@/i18n/routing"
 import LanguageSwitcher from "@/components/LanguageSwitcher"
 import type { Metadata } from "next"
@@ -47,6 +47,7 @@ function SacredMandala({ className = "" }: { className?: string }) {
 
 export default async function PlacePage({ params }: { params: Promise<{ slug: string; locale: string }> }) {
   const { slug, locale } = await params
+  setRequestLocale(locale)
   const place = places.find(p => p.slug === slug)
   if (!place) notFound()
 

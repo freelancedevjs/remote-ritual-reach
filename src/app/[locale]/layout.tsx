@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Inter, Cinzel, Noto_Sans } from "next/font/google"
 import { NextIntlClientProvider, hasLocale } from "next-intl"
+import { setRequestLocale } from "next-intl/server"
 import { notFound } from "next/navigation"
 import { routing } from "@/i18n/routing"
 import "../globals.css"
@@ -41,6 +42,7 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params
   if (!hasLocale(routing.locales, locale)) notFound()
+  setRequestLocale(locale) // required for static export — avoids headers() call
 
   const messages = (await import(`../../../messages/${locale}.json`)).default
   const dir = ["ar", "ur", "he"].includes(locale) ? "rtl" : "ltr"
