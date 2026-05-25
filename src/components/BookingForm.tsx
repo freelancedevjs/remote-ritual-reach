@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useTranslations } from "next-intl"
 import { postToSheet } from "@/lib/sheets"
 
@@ -25,6 +25,8 @@ type Props = {
   badgeTextClass: string
 }
 
+const STORAGE_KEY = "sr_booking"
+
 export default function BookingForm({
   rituals, placeName, locale = "en",
   accentClass, accentTextClass, badgeClass, badgeTextClass,
@@ -36,14 +38,55 @@ export default function BookingForm({
   const [bookingId, setBookingId] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [bookingError, setBookingError] = useState<string | null>(null)
-  const [form, setForm] = useState({ name: "", identifier: "", family: "", whatsapp: "", date: "" })
+  const [form, setForm] = useState(() => {
+    const initial = { name: "", identifier: "", family: "", whatsapp: "", date: "" }
+    if (typeof window === "undefined") return initial
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY)
+      if (saved) return { ...initial, ...JSON.parse(saved) as Partial<typeof initial> }
+    } catch {}
+    return initial
+  })
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
+  const [geo, setGeo] = useState<{ lat: number; lng: number } | null>(null)
+
+  // Passive geolocation — browser shows its own permission prompt
+  useEffect(() => {
+    if (typeof navigator !== "undefined" && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        pos => setGeo({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        () => {} // silently ignore denial
+      )
+    }
+  }, [])
 
   const total = selectedRitual
     ? selectedRitual.price + (prasadAdd ? 15 : 0) + (priorityVideo ? 10 : 0)
     : 0
 
+  // Update a form field and persist the whole form to localStorage
+  function updateField(field: keyof typeof form, value: string) {
+    const next = { ...form, [field]: value }
+    setForm(next)
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)) } catch {}
+    // Clear per-field error on edit
+    if (fieldErrors[field]) {
+      setFieldErrors(prev => { const n = { ...prev }; delete n[field]; return n })
+    }
+  }
+
   async function handleSubmit() {
-    if (!form.name || !form.whatsapp || !form.date || !selectedRitual) return
+    // Per-field validation
+    const errors: Record<string, string> = {}
+    if (!form.name.trim()) errors.name = "Your name is required."
+    if (!form.whatsapp.trim()) errors.whatsapp = "WhatsApp number is required."
+    if (!form.date) errors.date = "Please select a preferred date."
+    if (!selectedRitual) errors.ritual = "Please select a ritual above."
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors)
+      return
+    }
+    setFieldErrors({})
     setSubmitting(true)
     setBookingError(null)
 
@@ -52,8 +95,8 @@ export default function BookingForm({
       type: "booking",
       bookingRef: id,
       place: placeName,
-      ritual: selectedRitual.name,
-      ritualPrice: selectedRitual.price,
+      ritual: selectedRitual!.name,
+      ritualPrice: selectedRitual!.price,
       name: form.name,
       identifier: form.identifier || "",
       family: form.family || "",
@@ -64,11 +107,16 @@ export default function BookingForm({
       total,
       locale,
       submittedAt: new Date().toISOString(),
+      ...(geo ? { latitude: geo.lat, longitude: geo.lng } : {}),
     })
 
     setSubmitting(false)
-    if (result.ok) setBookingId(id)
-    else setBookingError(result.error)
+    if (result.ok) {
+      setBookingId(id)
+      try { localStorage.removeItem(STORAGE_KEY) } catch {}
+    } else {
+      setBookingError(result.error)
+    }
   }
 
   // ── SUCCESS STATE ────────────────────────────────────────────────────────────
@@ -121,13 +169,21 @@ export default function BookingForm({
   // ── FORM STATE ───────────────────────────────────────────────────────────────
   return (
     <div className="space-y-4">
+      {/* Ritual selection error */}
+      {fieldErrors.ritual && (
+        <p className="text-sm text-red-500 font-medium px-1">{fieldErrors.ritual}</p>
+      )}
+
       <div className="grid md:grid-cols-2 gap-4">
         {rituals.map(r => {
           const isSelected = selectedRitual?.id === r.id
           return (
             <button
               key={r.id}
-              onClick={() => setSelectedRitual(r)}
+              onClick={() => {
+                setSelectedRitual(r)
+                if (fieldErrors.ritual) setFieldErrors(prev => { const n = { ...prev }; delete n.ritual; return n })
+              }}
               className={`text-left rounded-2xl border-2 p-5 transition-all duration-200 hover:shadow-md ${
                 isSelected
                   ? `${badgeClass} border-current shadow-md`
@@ -193,11 +249,20 @@ export default function BookingForm({
                 {t("full_name")} *
               </label>
               <input
-                type="text" required value={form.name}
-                onChange={e => setForm({ ...form, name: e.target.value })}
-                className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/15 transition-all"
+                type="text"
+                required
+                value={form.name}
+                onChange={e => updateField("name", e.target.value)}
+                className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition-all ${
+                  fieldErrors.name
+                    ? "border-red-300 focus:border-red-400 focus:ring-red-400/15"
+                    : "border-stone-200 focus:border-amber-400 focus:ring-amber-400/15"
+                }`}
                 placeholder={t("full_name_placeholder")}
               />
+              {fieldErrors.name && (
+                <p className="text-xs text-red-500 mt-1">{fieldErrors.name}</p>
+              )}
             </div>
 
             <div>
@@ -205,8 +270,9 @@ export default function BookingForm({
                 {t("identifier")}
               </label>
               <input
-                type="text" value={form.identifier}
-                onChange={e => setForm({ ...form, identifier: e.target.value })}
+                type="text"
+                value={form.identifier}
+                onChange={e => updateField("identifier", e.target.value)}
                 className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/15 transition-all"
               />
             </div>
@@ -216,8 +282,9 @@ export default function BookingForm({
                 {t("family")}
               </label>
               <input
-                type="text" value={form.family}
-                onChange={e => setForm({ ...form, family: e.target.value })}
+                type="text"
+                value={form.family}
+                onChange={e => updateField("family", e.target.value)}
                 className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/15 transition-all"
                 placeholder={t("family_placeholder")}
               />
@@ -228,11 +295,20 @@ export default function BookingForm({
                 {t("whatsapp")} *
               </label>
               <input
-                type="tel" required value={form.whatsapp}
-                onChange={e => setForm({ ...form, whatsapp: e.target.value })}
-                className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/15 transition-all"
+                type="tel"
+                required
+                value={form.whatsapp}
+                onChange={e => updateField("whatsapp", e.target.value)}
+                className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition-all ${
+                  fieldErrors.whatsapp
+                    ? "border-red-300 focus:border-red-400 focus:ring-red-400/15"
+                    : "border-stone-200 focus:border-amber-400 focus:ring-amber-400/15"
+                }`}
                 placeholder={t("whatsapp_placeholder")}
               />
+              {fieldErrors.whatsapp && (
+                <p className="text-xs text-red-500 mt-1">{fieldErrors.whatsapp}</p>
+              )}
             </div>
 
             <div>
@@ -240,11 +316,20 @@ export default function BookingForm({
                 {t("date")} *
               </label>
               <input
-                type="date" required value={form.date}
-                onChange={e => setForm({ ...form, date: e.target.value })}
-                className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/15 transition-all"
+                type="date"
+                required
+                value={form.date}
+                onChange={e => updateField("date", e.target.value)}
+                className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition-all ${
+                  fieldErrors.date
+                    ? "border-red-300 focus:border-red-400 focus:ring-red-400/15"
+                    : "border-stone-200 focus:border-amber-400 focus:ring-amber-400/15"
+                }`}
                 min={new Date().toISOString().split("T")[0]}
               />
+              {fieldErrors.date && (
+                <p className="text-xs text-red-500 mt-1">{fieldErrors.date}</p>
+              )}
             </div>
 
             <div className="border border-stone-100 rounded-xl p-4 bg-stone-50">
