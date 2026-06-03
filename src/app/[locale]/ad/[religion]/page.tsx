@@ -79,30 +79,23 @@ export default async function AdReligionPage({
         </div>
       </nav>
 
-      {/* ── HERO with YouTube background ── */}
+      {/* ── HERO with background video ── */}
       <section
         className={`relative min-h-[92vh] flex items-center justify-center overflow-hidden ${rel.theme.nav}`}
       >
-        {/* YouTube background video — muted autoplay, CSS positioning trick */}
+        {/* Native video — SD 640×360, muted autoplay loop, no iframe/YouTube needed */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <iframe
-            src={`https://www.youtube.com/embed/${rel.heroVideoId}?autoplay=1&mute=1&loop=1&playlist=${rel.heroVideoId}&controls=0&disablekb=1&modestbranding=1&showinfo=0&rel=0`}
-            allow="autoplay; encrypted-media"
-            loading="lazy"
-            className="absolute"
-            style={{
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "100vw",
-              height: "56.25vw",
-              minHeight: "100%",
-              minWidth: "177.78vh",
-              opacity: 0.45,
-              border: "none",
-            }}
-            title={`${rel.name} devotional video`}
-          />
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute w-full h-full object-cover"
+            style={{ opacity: 0.45 }}
+            aria-hidden
+          >
+            <source src={rel.heroVideoUrl} type="video/mp4" />
+          </video>
         </div>
 
         {/* Mandala decoration — visible when iframe hasn't loaded */}

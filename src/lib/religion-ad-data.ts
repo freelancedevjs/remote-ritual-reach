@@ -26,7 +26,10 @@ export type ReligionAdData = {
   }
   heroTitle: string
   heroSubtitle: string
-  heroVideoId: string  // YouTube video ID — search term in comment for easy replacement
+  // Pexels SD MP4 (640×360) — small, fast, free to embed. Format:
+  // https://videos.pexels.com/video-files/{ID}/{ID}-sd_640_360_25fps.mp4
+  // Replace any ID: go to pexels.com/videos, open a video, copy ID from the URL.
+  heroVideoUrl: string
   quotes: Array<{ text: string; source: string }>
   lifeProblems: LifeProblemRemedy[]
 }
@@ -47,8 +50,8 @@ export const religions: ReligionAdData[] = [
     },
     heroTitle: "Your Prayer Has No Distance",
     heroSubtitle: "Connect with the sacred temples of Bharat — from anywhere in the world",
-    // Search: "Kashi Vishwanath Ganga Aarti Varanasi" — iconic ghat aarti footage
-    heroVideoId: "iOHCMOIjBWE",
+    // Pexels search: "temple fire puja sacred flame india"
+    heroVideoUrl: "https://videos.pexels.com/video-files/5177023/5177023-sd_640_360_25fps.mp4",
     quotes: [
       {
         text: "Whenever righteousness declines and unrighteousness rises, I manifest myself. For the protection of the good, for the destruction of evil, and for the establishment of righteousness, I am born in every age.",
@@ -134,8 +137,8 @@ export const religions: ReligionAdData[] = [
     },
     heroTitle: "Your Dua Reaches Beyond Any Distance",
     heroSubtitle: "The doors of the Dargah are open — for every heart, from every country",
-    // Search: "Ajmer Sharif Dargah Qawwali" — famous qawwali footage at the shrine
-    heroVideoId: "6yp56clTdCo",
+    // Pexels search: "mosque islamic architecture light lanterns"
+    heroVideoUrl: "https://videos.pexels.com/video-files/4114076/4114076-sd_640_360_25fps.mp4",
     quotes: [
       {
         text: "And your Lord says: Call upon Me; I will respond to you.",
@@ -221,8 +224,8 @@ export const religions: ReligionAdData[] = [
     },
     heroTitle: "Ek Onkar — One God, No Distance",
     heroSubtitle: "The Golden Temple's doors are open to all — Ardas carries your wish across the world",
-    // Search: "Golden Temple Amritsar morning dawn sarovar" — stunning public footage
-    heroVideoId: "HoXxQQAB5bM",
+    // Pexels search: "golden temple amritsar dawn reflection water"
+    heroVideoUrl: "https://videos.pexels.com/video-files/3581397/3581397-sd_640_360_25fps.mp4",
     quotes: [
       {
         text: "Ik Onkar — There is One God, the Creator, the Name is Truth, Without fear, Without enmity, Timeless, Self-illumined.",
@@ -300,8 +303,8 @@ export const religions: ReligionAdData[] = [
     },
     heroTitle: "Your Prayer Is Heard",
     heroSubtitle: "The shrines of India carry centuries of answered prayers — from believers worldwide",
-    // Search: "Velankanni basilica feast procession" — public footage of the annual feast
-    heroVideoId: "w3W0KqJnv_U",
+    // Pexels search: "church candle light devotion prayer"
+    heroVideoUrl: "https://videos.pexels.com/video-files/3571264/3571264-sd_640_360_25fps.mp4",
     quotes: [
       {
         text: "Ask and it will be given to you; seek and you will find; knock and the door will be opened for you.",
@@ -379,8 +382,8 @@ export const religions: ReligionAdData[] = [
     },
     heroTitle: "Peace Comes From Within",
     heroSubtitle: "The Bodhi Tree still stands where the Buddha attained enlightenment — your meditation connects to that moment",
-    // Search: "Mahabodhi Temple Bodh Gaya monks meditation" — public devotional footage
-    heroVideoId: "wlwHWHdLGWE",
+    // Pexels search: "buddhist monks meditation temple serene"
+    heroVideoUrl: "https://videos.pexels.com/video-files/3643460/3643460-sd_640_360_25fps.mp4",
     quotes: [
       {
         text: "Peace comes from within. Do not seek it without.",
@@ -458,8 +461,8 @@ export const religions: ReligionAdData[] = [
     },
     heroTitle: "Ahimsa Paramo Dharma",
     heroSubtitle: "Non-violence is the highest religion — Shatrunjaya Hill carries 23 crore liberated souls",
-    // Search: "Palitana Jain temples Shatrunjaya Hill" — public footage of the sacred hill
-    heroVideoId: "BVxnjBfqBaM",
+    // Pexels search: "ancient stone temple pillars india peaceful"
+    heroVideoUrl: "https://videos.pexels.com/video-files/4629869/4629869-sd_640_360_25fps.mp4",
     quotes: [
       {
         text: "Ahimsa Paramo Dharma — Non-violence is the supreme dharma.",
@@ -537,8 +540,8 @@ export const religions: ReligionAdData[] = [
     },
     heroTitle: "One God, Many Names",
     heroSubtitle: "Sai Baba said: Sabka Malik Ek — Come as you are, from wherever you are",
-    // Search: "Shirdi Sai Baba aarti darshan" — iconic aarti footage from the samadhi mandir
-    heroVideoId: "8WMvTJBJiXQ",
+    // Pexels search: "incense smoke meditation sunrise divine light"
+    heroVideoUrl: "https://videos.pexels.com/video-files/1723731/1723731-sd_640_360_25fps.mp4",
     quotes: [
       {
         text: "Sabka Malik Ek — The Master of all is One.",

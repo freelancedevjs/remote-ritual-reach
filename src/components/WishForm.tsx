@@ -1,5 +1,6 @@
 "use client"
 import { useState } from "react"
+import { useRouter } from "@/i18n/navigation"
 import { postToSheet } from "@/lib/sheets"
 
 type Props = {
@@ -9,14 +10,14 @@ type Props = {
   accentTextClass: string
 }
 
-type FormState = "idle" | "submitting" | "success" | "error"
+type FormState = "idle" | "submitting" | "error"
 
 export default function WishForm({ religion, locale, accentClass, accentTextClass }: Props) {
+  const router = useRouter()
   const [form, setForm] = useState({ wish: "", whatsapp: "", name: "" })
   const [status, setStatus] = useState<FormState>("idle")
   const [errorMsg, setErrorMsg] = useState("")
   const [wishError, setWishError] = useState("")
-  const [refId, setRefId] = useState("")
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -30,10 +31,13 @@ export default function WishForm({ religion, locale, accentClass, accentTextClas
     }
 
     setStatus("submitting")
-    const id = crypto.randomUUID()
+
+    // 6-digit numeric reference (easier to read/quote than UUID)
+    const ref = String(Math.floor(100000 + Math.random() * 900000))
 
     const result = await postToSheet({
       type: "wish",
+      wishRef: ref,
       religion,
       name: form.name.trim() || "",
       whatsapp: form.whatsapp.trim() || "",
@@ -43,39 +47,13 @@ export default function WishForm({ religion, locale, accentClass, accentTextClas
     })
 
     if (result.ok) {
-      setRefId(id.slice(0, 8))
-      setStatus("success")
-      setForm({ wish: "", whatsapp: "", name: "" })
+      const qs = new URLSearchParams({ ref, religion })
+      if (form.name.trim()) qs.set("name", form.name.trim())
+      router.push(`/ad/thank-you?${qs.toString()}`)
     } else {
       setStatus("error")
       setErrorMsg(result.error)
     }
-  }
-
-  if (status === "success") {
-    return (
-      <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-10 text-center max-w-lg mx-auto">
-        <div className="text-5xl mb-4">🙏</div>
-        <h3 className="text-xl font-bold text-stone-800 mb-2">Your Wish Has Been Received</h3>
-        <p className="text-stone-500 text-sm leading-relaxed mb-4">
-          {refId && (
-            <>
-              Your reference:{" "}
-              <code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">{refId}</code>
-              <br />
-            </>
-          )}
-          We will review your intention and suggest the right sacred path for your situation.
-          Sacred things unfold at their own pace.
-        </p>
-        <button
-          onClick={() => setStatus("idle")}
-          className="text-sm text-stone-400 underline hover:text-stone-600 transition-colors"
-        >
-          Submit another wish
-        </button>
-      </div>
-    )
   }
 
   return (
@@ -88,8 +66,7 @@ export default function WishForm({ religion, locale, accentClass, accentTextClas
 
       <div>
         <label className="block text-sm font-semibold text-stone-700 mb-1.5">
-          Describe your wish or situation{" "}
-          <span className="text-red-500">*</span>
+          Describe your wish or situation <span className="text-red-500">*</span>
         </label>
         <textarea
           value={form.wish}
@@ -101,16 +78,13 @@ export default function WishForm({ religion, locale, accentClass, accentTextClas
           placeholder="Tell us what you're going through — a problem, a longing, a hope, or a specific wish..."
           className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-stone-400 focus:ring-2 focus:ring-stone-400/10 transition-all bg-white resize-none"
         />
-        {wishError && (
-          <p className="text-xs text-red-500 mt-1">{wishError}</p>
-        )}
+        {wishError && <p className="text-xs text-red-500 mt-1">{wishError}</p>}
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-semibold text-stone-700 mb-1.5">
-            Your Name{" "}
-            <span className="text-stone-400 font-normal">(optional)</span>
+            Your Name <span className="text-stone-400 font-normal">(optional)</span>
           </label>
           <input
             type="text"
@@ -122,8 +96,7 @@ export default function WishForm({ religion, locale, accentClass, accentTextClas
         </div>
         <div>
           <label className="block text-sm font-semibold text-stone-700 mb-1.5">
-            WhatsApp Number{" "}
-            <span className="text-stone-400 font-normal">(optional)</span>
+            WhatsApp Number <span className="text-stone-400 font-normal">(optional)</span>
           </label>
           <input
             type="tel"
