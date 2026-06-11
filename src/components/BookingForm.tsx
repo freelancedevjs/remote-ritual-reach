@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import { useTranslations } from "next-intl"
 import { useRouter } from "@/i18n/navigation"
 import { postToSheet } from "@/lib/sheets"
+import FreeConsultWidget from "@/components/FreeConsultWidget"
 
 type Ritual = {
   id: string
@@ -132,7 +133,16 @@ export default function BookingForm({
 
   // ── FORM STATE ───────────────────────────────────────────────────────────────
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Free consultation — always shown first */}
+      <FreeConsultWidget context={placeName} compact />
+
+      <div className="flex items-center gap-3">
+        <div className="flex-1 h-px bg-stone-200" />
+        <span className="text-xs text-stone-400 font-semibold uppercase tracking-wide">or book a ritual</span>
+        <div className="flex-1 h-px bg-stone-200" />
+      </div>
+
       {/* Ritual selection error */}
       {fieldErrors.ritual && (
         <p className="text-sm text-red-500 font-medium px-1">{fieldErrors.ritual}</p>
