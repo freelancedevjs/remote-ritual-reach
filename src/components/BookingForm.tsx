@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
 import { useTranslations } from "next-intl"
+import { useRouter } from "@/i18n/navigation"
 import { postToSheet } from "@/lib/sheets"
 
 type Ritual = {
@@ -32,10 +33,10 @@ export default function BookingForm({
   accentClass, accentTextClass, badgeClass, badgeTextClass,
 }: Props) {
   const t = useTranslations("booking")
+  const router = useRouter()
   const [selectedRitual, setSelectedRitual] = useState<Ritual | null>(null)
   const [prasadAdd, setPrasadAdd] = useState(false)
   const [priorityVideo, setPriorityVideo] = useState(false)
-  const [bookingId, setBookingId] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [bookingError, setBookingError] = useState<string | null>(null)
   const [form, setForm] = useState(() => {
@@ -90,10 +91,10 @@ export default function BookingForm({
     setSubmitting(true)
     setBookingError(null)
 
-    const id = crypto.randomUUID()
+    const ref = String(Math.floor(100000 + Math.random() * 900000))
     const result = await postToSheet({
       type: "booking",
-      bookingRef: id,
+      bookingRef: ref,
       place: placeName,
       ritual: selectedRitual!.name,
       ritualPrice: selectedRitual!.price,
@@ -112,58 +113,21 @@ export default function BookingForm({
 
     setSubmitting(false)
     if (result.ok) {
-      setBookingId(id)
       try { localStorage.removeItem(STORAGE_KEY) } catch {}
+      const qs = new URLSearchParams({
+        ref,
+        place: placeName,
+        ritual: selectedRitual!.name,
+        name: form.name,
+        date: form.date,
+        total: String(total),
+        ...(prasadAdd ? { prasad: "1" } : {}),
+        ...(priorityVideo ? { video: "1" } : {}),
+      })
+      router.push(`/booking/thank-you?${qs.toString()}`)
     } else {
       setBookingError(result.error)
     }
-  }
-
-  // ── SUCCESS STATE ────────────────────────────────────────────────────────────
-  if (bookingId) {
-    return (
-      <div className="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-8 text-center">
-        <div className="text-6xl mb-5 animate-float inline-block">🙏</div>
-        <h3 className="font-display text-2xl font-bold text-stone-800 mb-2">{t("success_title")}</h3>
-
-        <div className="bg-white rounded-xl p-5 text-left max-w-sm mx-auto mb-6 border border-amber-100 shadow-sm">
-          <div className="space-y-2">
-            <p className="text-sm text-stone-500 font-medium">{placeName}</p>
-            <p className="text-sm text-stone-600">
-              <span className="font-semibold text-stone-700">{t("ritual_label")}:</span> {selectedRitual?.name}
-            </p>
-            <p className="text-sm text-stone-600">
-              <span className="font-semibold text-stone-700">{t("name_label")}:</span> {form.name}
-            </p>
-            <p className="text-sm text-stone-600">
-              <span className="font-semibold text-stone-700">{t("date_label")}:</span> {form.date}
-            </p>
-            <div className="border-t border-stone-100 pt-2 mt-2">
-              <p className="text-lg font-bold text-stone-800">{t("total_label")}: ${total}</p>
-            </div>
-          </div>
-        </div>
-
-        <p className="text-stone-500 text-sm leading-relaxed max-w-sm mx-auto mb-8">
-          {t("success_hope")}
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <a
-            href="#"
-            className="inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-7 py-3.5 rounded-xl transition-all hover:scale-105 active:scale-95 shadow-md text-sm"
-          >
-            💳 {t("pay_now")}
-          </a>
-          <a
-            href="#"
-            className="inline-flex items-center justify-center gap-2 bg-white border-2 border-amber-300 hover:border-amber-400 text-amber-700 hover:text-amber-800 font-bold px-7 py-3.5 rounded-xl transition-all hover:scale-105 active:scale-95 text-sm"
-          >
-            🤲 {t("donate")}
-          </a>
-        </div>
-      </div>
-    )
   }
 
   // ── FORM STATE ───────────────────────────────────────────────────────────────
