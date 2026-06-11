@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useTranslations } from "next-intl"
 import { Link } from "@/i18n/navigation"
 import { places } from "@/lib/places-data"
@@ -11,7 +11,16 @@ import HeroShader from "@/components/HeroShader"
 
 const typeFilters = ["All", "temple", "gurdwara", "dargah", "church", "monastery", "ashram", "shrine", "samadhi"]
 
-// Mystical science category metadata for display
+const SEARCH_SUGGESTIONS = [
+  "How to remove negative energy from home permanently",
+  "Spiritual healing for ancestral karma",
+  "Ancient Vedic rituals for success",
+  "How to protect yourself from psychic attacks",
+  "Vedic astrology remedies for career",
+  "Distance energy healing techniques",
+  "Spiritual manifestation techniques",
+]
+
 const scienceCategoryMeta: Record<string, { label: string; color: string }> = {
   numerology:    { label: "Numerology",     color: "bg-violet-100 text-violet-800" },
   astrology:     { label: "Astrology",      color: "bg-indigo-100 text-indigo-800" },
@@ -65,30 +74,54 @@ export default function HomePage() {
   const t = useTranslations()
   const [filter, setFilter] = useState("All")
   const [search, setSearch] = useState("")
+  const [suggIdx, setSuggIdx] = useState(0)
+  const [heroSearch, setHeroSearch] = useState("")
+  const placesRef = useRef<HTMLElement>(null)
+
+  // Rotate suggestion placeholder every 3s
+  useEffect(() => {
+    const id = setInterval(() => setSuggIdx(i => (i + 1) % SEARCH_SUGGESTIONS.length), 3000)
+    return () => clearInterval(id)
+  }, [])
+
+  function handleHeroSearch(e: React.FormEvent) {
+    e.preventDefault()
+    if (heroSearch.trim()) setSearch(heroSearch.trim())
+    placesRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  function pickSuggestion(s: string) {
+    setHeroSearch(s)
+    setSearch(s)
+    placesRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
 
   const filtered = places.filter(p => {
     const matchType = filter === "All" || p.type === filter
-    const matchSearch = search === "" ||
-      p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.primaryFigure.toLowerCase().includes(search.toLowerCase()) ||
-      p.location.city.toLowerCase().includes(search.toLowerCase()) ||
-      p.tags.some(tag => tag.includes(search.toLowerCase()))
+    const q = search.toLowerCase()
+    const matchSearch = q === "" ||
+      p.name.toLowerCase().includes(q) ||
+      p.primaryFigure.toLowerCase().includes(q) ||
+      p.location.city.toLowerCase().includes(q) ||
+      p.tags.some(tag => tag.includes(q)) ||
+      p.description.toLowerCase().includes(q)
     return matchType && matchSearch
   })
 
   return (
     <main className="min-h-screen bg-stone-50 overflow-x-hidden">
-      {/* Fixed navbar */}
+
+      {/* ── NAVBAR */}
       <header className="fixed top-0 left-0 right-0 z-50 glass-dark border-b border-white/8">
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between gap-3">
           <span className="font-display text-amber-400 text-sm font-bold tracking-widest uppercase flex-shrink-0">✦ SacredReach</span>
           <nav className="flex items-center gap-3 sm:gap-5">
-            <a href="#places" className="text-stone-400 hover:text-amber-400 transition-colors text-xs tracking-wide hidden sm:block">{t('home.places_title')}</a>
-            <a href="#sciences" className="text-stone-400 hover:text-amber-400 transition-colors text-xs tracking-wide hidden sm:block">🔮 Sciences</a>
-            <a href="#gurus" className="text-stone-400 hover:text-amber-400 transition-colors text-xs tracking-wide hidden sm:block">{t('home.gurus_title').split(' ')[0]}</a>
+            <a href="#sciences" className="text-stone-400 hover:text-amber-400 transition-colors text-xs tracking-wide hidden sm:block">🔮 Divination</a>
+            <a href="#gurus" className="text-stone-400 hover:text-amber-400 transition-colors text-xs tracking-wide hidden sm:block">✦ Masters</a>
+            <a href="#places" className="text-stone-400 hover:text-amber-400 transition-colors text-xs tracking-wide hidden sm:block">🛕 Holy Sites</a>
             <LanguageSwitcher />
-            <a href="#places" className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs px-4 py-2 rounded-full transition-colors hidden sm:block">
-              Book a Ritual
+            <a href="#sciences" className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs px-4 py-2 rounded-full transition-colors hidden sm:block">
+              Find a Remedy
             </a>
           </nav>
         </div>
@@ -96,7 +129,6 @@ export default function HomePage() {
 
       {/* ── HERO */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-stone-950 pt-14">
-        {/* Interactive shader wallpaper — reacts to mouse and clicks */}
         <HeroShader />
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full glow-gold pointer-events-none animate-glow-pulse" />
         <div className="absolute top-1/4 left-1/5 w-[350px] h-[350px] rounded-full bg-orange-500/5 blur-[90px] pointer-events-none" />
@@ -125,7 +157,35 @@ export default function HomePage() {
           <p className="text-stone-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up" style={{ animationDelay: "0.35s" }}>
             {t('home.hero_subtitle')}
           </p>
-          <div className="flex flex-wrap gap-3 justify-center mb-12 animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
+
+          {/* ── HERO SEARCH */}
+          <div className="animate-fade-in-up max-w-2xl mx-auto mb-6" style={{ animationDelay: "0.5s" }}>
+            <form onSubmit={handleHeroSearch} className="flex rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+              <input
+                type="text"
+                value={heroSearch}
+                onChange={e => setHeroSearch(e.target.value)}
+                placeholder={SEARCH_SUGGESTIONS[suggIdx]}
+                className="flex-1 bg-white/8 backdrop-blur px-5 py-4 text-white placeholder:text-stone-500 focus:outline-none text-sm min-w-0 transition-all focus:bg-white/12"
+              />
+              <button type="submit"
+                className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-7 py-4 text-sm transition-all flex-shrink-0 hover:shadow-[0_0_30px_rgba(245,158,11,0.4)]">
+                Search ✦
+              </button>
+            </form>
+
+            {/* Suggestion chips */}
+            <div className="flex flex-wrap gap-2 mt-4 justify-center">
+              {SEARCH_SUGGESTIONS.map((s, i) => (
+                <button key={i} onClick={() => pickSuggestion(s)}
+                  className="text-[11px] bg-white/5 hover:bg-amber-500/15 border border-white/8 hover:border-amber-400/30 text-stone-500 hover:text-amber-300 px-3 py-1.5 rounded-full transition-all text-left leading-snug">
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-3 justify-center animate-fade-in-up" style={{ animationDelay: "0.65s" }}>
             {[
               { icon: "📹", key: "home.badge_video" },
               { icon: "📦", key: "home.badge_shipping" },
@@ -137,12 +197,8 @@ export default function HomePage() {
               </span>
             ))}
           </div>
-          <div className="animate-fade-in-up" style={{ animationDelay: "0.65s" }}>
-            <a href="#places" className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-8 py-4 rounded-full text-base transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(245,158,11,0.5)] active:scale-95">
-              {t('home.places_title')} <span className="animate-float inline-block">↓</span>
-            </a>
-          </div>
         </div>
+
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40 animate-fade-in-up" style={{ animationDelay: "1s" }}>
           <div className="w-5 h-9 border border-stone-600 rounded-full flex items-start justify-center pt-1.5">
             <div className="w-1 h-2.5 bg-amber-400 rounded-full animate-scroll-bounce" />
@@ -180,13 +236,127 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── SACRED PLACES */}
-      <section id="places" className="py-20 px-4 bg-stone-50">
+      {/* ── MYSTICAL ARTS & DIVINATION — first content section */}
+      <section id="sciences" className="py-24 px-4 bg-stone-950 relative overflow-hidden">
+        <div className="absolute -left-32 top-1/2 -translate-y-1/2 opacity-[0.04] pointer-events-none select-none">
+          <SacredMandala className="w-[600px] h-[600px] text-amber-400" />
+        </div>
+        <div className="max-w-6xl mx-auto relative z-10">
+          <ScrollReveal className="mb-4">
+            <p className="text-amber-500 text-xs font-bold tracking-[0.2em] uppercase mb-2">🔮 Ancient Wisdom Sciences</p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-2">
+              Mystical Arts &amp; Divination
+            </h2>
+            <p className="text-stone-500 text-sm max-w-2xl leading-relaxed">
+              Numerology · Astrology · Vastu · Palmistry · Tarot · Nadi · Gemstone Therapy · Mantra Healing — and more.
+              Every science is practiced by verified experts. Delivered as written reports, live video calls, or physical items.
+            </p>
+          </ScrollReveal>
+
+          <ScrollReveal animation="reveal-scale" delay={60} className="flex flex-wrap gap-2 mb-10 mt-6">
+            {(["All", ...Array.from(new Set(mysticalSciences.map(s => s.category)))] as string[]).map((cat, i) => {
+              const meta = scienceCategoryMeta[cat]
+              return (
+                <span key={cat}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold border cursor-default ${
+                    i === 0
+                      ? "bg-amber-500/20 text-amber-300 border-amber-500/30"
+                      : "bg-stone-800/60 text-stone-400 border-stone-700/50"
+                  }`}>
+                  {i === 0 ? "All Sciences" : (meta?.label ?? cat)}
+                </span>
+              )
+            })}
+          </ScrollReveal>
+
+          <ScrollReveal animation="reveal-stagger" className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {mysticalSciences.map(science => {
+              const catMeta = scienceCategoryMeta[science.category]
+              const minPrice = Math.min(...science.packages.map(p => p.price))
+              return (
+                <Link key={science.slug} href={`/service/${science.slug}`} className="block group sacred-card">
+                  <div className="bg-stone-800/40 border border-stone-700/40 hover:border-amber-400/30 rounded-2xl overflow-hidden transition-all backdrop-blur-sm">
+                    <div className={`h-1 w-full ${science.theme.nav}`} />
+                    <div className="p-5">
+                      <div className="flex items-start gap-3 mb-3">
+                        <div className={`flex-shrink-0 w-11 h-11 rounded-xl ${science.theme.badge} ${science.theme.badgeText} flex items-center justify-center text-xl shadow-sm`}>
+                          {science.icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-bold text-white text-sm leading-tight group-hover:text-amber-400 transition-colors mb-0.5">
+                            {science.name}
+                          </h3>
+                          <p className="text-stone-500 text-[11px] truncate">{science.originalName}</p>
+                        </div>
+                      </div>
+                      <p className="text-amber-400/70 text-xs font-semibold italic mb-2 leading-tight">
+                        &ldquo;{science.tagline}&rdquo;
+                      </p>
+                      <div className="space-y-1 mb-4">
+                        {science.whatItReveals.slice(0, 3).map((reveal, i) => (
+                          <div key={i} className="flex items-start gap-1.5">
+                            <span className="text-amber-500 text-xs mt-0.5 flex-shrink-0">✦</span>
+                            <p className="text-stone-400 text-[11px] leading-relaxed line-clamp-1">{reveal}</p>
+                          </div>
+                        ))}
+                        {science.whatItReveals.length > 3 && (
+                          <p className="text-stone-600 text-[11px] pl-4">+{science.whatItReveals.length - 3} more insights →</p>
+                        )}
+                      </div>
+                      <div className="flex items-center justify-between pt-3 border-t border-stone-700/40">
+                        <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${catMeta?.color ?? "bg-stone-700 text-stone-300"}`}>
+                          {catMeta?.label ?? science.category}
+                        </span>
+                        <span className="text-sm font-bold text-amber-400">from ${minPrice}</span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              )
+            })}
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* ── SPIRITUAL MASTERS */}
+      <section id="gurus" className="py-24 px-4 bg-stone-900 relative overflow-hidden">
+        <div className="absolute -right-32 top-1/2 -translate-y-1/2 opacity-[0.04] pointer-events-none select-none">
+          <SacredMandala className="w-[600px] h-[600px] text-amber-400" />
+        </div>
+        <div className="max-w-6xl mx-auto relative z-10">
+          <ScrollReveal className="mb-10">
+            <p className="text-amber-500 text-xs font-bold tracking-[0.2em] uppercase mb-2">{t('home.gurus_title')}</p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-2">{t('home.gurus_title')}</h2>
+            <p className="text-stone-500 text-sm max-w-lg leading-relaxed">{t('home.gurus_subtitle')}</p>
+          </ScrollReveal>
+          <ScrollReveal animation="reveal-stagger" className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {gurus.map(g => (
+              <Link key={g.slug} href={`/guru/${g.slug}`} className="block group sacred-card">
+                <div className="bg-stone-800/40 border border-stone-700/40 hover:border-amber-400/25 rounded-2xl p-5 transition-colors backdrop-blur-sm">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 rounded-full bg-stone-700/60 border border-stone-600/50 flex items-center justify-center text-2xl flex-shrink-0 group-hover:bg-stone-600/60 transition-colors">{g.icon}</div>
+                    <div>
+                      <h3 className="font-bold text-white text-sm leading-tight group-hover:text-amber-400 transition-colors">{g.name}</h3>
+                      <p className="text-stone-500 text-xs mt-0.5">{g.lifespan}</p>
+                    </div>
+                  </div>
+                  <p className="text-amber-500/80 text-xs font-semibold mb-2 uppercase tracking-wide">{g.tradition.split(" — ")[0]}</p>
+                  <p className="text-stone-500 text-xs line-clamp-2 leading-relaxed">{g.bio.slice(0, 95)}…</p>
+                  <div className="mt-4 text-xs text-stone-600 group-hover:text-amber-500 transition-colors font-medium">Explore teachings →</div>
+                </div>
+              </Link>
+            ))}
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* ── HOLY SITES */}
+      <section id="places" ref={placesRef} className="py-20 px-4 bg-stone-50">
         <div className="max-w-6xl mx-auto">
           <ScrollReveal className="mb-10">
-            <p className="text-amber-600 text-xs font-bold tracking-[0.2em] uppercase mb-2">{t('home.places_title')}</p>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-stone-800 mb-2">Holy Sites Around the World</h2>
-            <p className="text-stone-400 text-sm">Temples · Gurdwaras · Dargahs · Churches · Monasteries · Ashrams</p>
+            <p className="text-amber-600 text-xs font-bold tracking-[0.2em] uppercase mb-2">🛕 Sacred Holy Sites</p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-stone-800 mb-2">Temples · Dargahs · Gurdwaras · Churches</h2>
+            <p className="text-stone-400 text-sm">Book rituals at the world's most revered sacred places — performed on your behalf, with video proof</p>
           </ScrollReveal>
 
           <ScrollReveal animation="reveal-scale" className="mb-5">
@@ -241,128 +411,6 @@ export default function HomePage() {
               <p className="text-lg font-medium text-stone-600">{t('home.no_results', { search })}</p>
             </div>
           )}
-        </div>
-      </section>
-
-      {/* ── SPIRITUAL MASTERS */}
-      <section id="gurus" className="py-24 px-4 bg-stone-900 relative overflow-hidden">
-        <div className="absolute -right-32 top-1/2 -translate-y-1/2 opacity-[0.04] pointer-events-none select-none">
-          <SacredMandala className="w-[600px] h-[600px] text-amber-400" />
-        </div>
-        <div className="max-w-6xl mx-auto relative z-10">
-          <ScrollReveal className="mb-10">
-            <p className="text-amber-500 text-xs font-bold tracking-[0.2em] uppercase mb-2">{t('home.gurus_title')}</p>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-2">{t('home.gurus_title')}</h2>
-            <p className="text-stone-500 text-sm max-w-lg leading-relaxed">{t('home.gurus_subtitle')}</p>
-          </ScrollReveal>
-          <ScrollReveal animation="reveal-stagger" className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {gurus.map(g => (
-              <Link key={g.slug} href={`/guru/${g.slug}`} className="block group sacred-card">
-                <div className="bg-stone-800/40 border border-stone-700/40 hover:border-amber-400/25 rounded-2xl p-5 transition-colors backdrop-blur-sm">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-stone-700/60 border border-stone-600/50 flex items-center justify-center text-2xl flex-shrink-0 group-hover:bg-stone-600/60 transition-colors">{g.icon}</div>
-                    <div>
-                      <h3 className="font-bold text-white text-sm leading-tight group-hover:text-amber-400 transition-colors">{g.name}</h3>
-                      <p className="text-stone-500 text-xs mt-0.5">{g.lifespan}</p>
-                    </div>
-                  </div>
-                  <p className="text-amber-500/80 text-xs font-semibold mb-2 uppercase tracking-wide">{g.tradition.split(" — ")[0]}</p>
-                  <p className="text-stone-500 text-xs line-clamp-2 leading-relaxed">{g.bio.slice(0, 95)}…</p>
-                  <div className="mt-4 text-xs text-stone-600 group-hover:text-amber-500 transition-colors font-medium">Explore teachings →</div>
-                </div>
-              </Link>
-            ))}
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* ── MYSTICAL SCIENCES ─────────────────────────────────────── */}
-      <section id="sciences" className="py-24 px-4 bg-stone-950 relative overflow-hidden">
-        <div className="absolute -left-32 top-1/2 -translate-y-1/2 opacity-[0.04] pointer-events-none select-none">
-          <SacredMandala className="w-[600px] h-[600px] text-amber-400" />
-        </div>
-        <div className="max-w-6xl mx-auto relative z-10">
-          <ScrollReveal className="mb-4">
-            <p className="text-amber-500 text-xs font-bold tracking-[0.2em] uppercase mb-2">🔮 Ancient Wisdom Sciences</p>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-2">
-              Mystical Arts &amp; Divination
-            </h2>
-            <p className="text-stone-500 text-sm max-w-2xl leading-relaxed">
-              Numerology · Astrology · Vastu · Palmistry · Tarot · Nadi · Gemstone Therapy · Mantra Healing — and more.
-              Every science is practiced by verified experts. Delivered as written reports, live video calls, or physical items.
-            </p>
-          </ScrollReveal>
-
-          {/* Category pill filters */}
-          <ScrollReveal animation="reveal-scale" delay={60} className="flex flex-wrap gap-2 mb-10 mt-6">
-            {(["All", ...Array.from(new Set(mysticalSciences.map(s => s.category)))] as string[]).map((cat, i) => {
-              const meta = scienceCategoryMeta[cat]
-              return (
-                <span
-                  key={cat}
-                  className={`px-3 py-1.5 rounded-full text-xs font-semibold border cursor-default ${
-                    i === 0
-                      ? "bg-amber-500/20 text-amber-300 border-amber-500/30"
-                      : "bg-stone-800/60 text-stone-400 border-stone-700/50"
-                  }`}
-                >
-                  {i === 0 ? "All Sciences" : (meta?.label ?? cat)}
-                </span>
-              )
-            })}
-          </ScrollReveal>
-
-          <ScrollReveal animation="reveal-stagger" className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {mysticalSciences.map(science => {
-              const catMeta = scienceCategoryMeta[science.category]
-              const minPrice = Math.min(...science.packages.map(p => p.price))
-              return (
-                <Link key={science.slug} href={`/service/${science.slug}`} className="block group sacred-card">
-                  <div className="bg-stone-800/40 border border-stone-700/40 hover:border-amber-400/30 rounded-2xl overflow-hidden transition-all backdrop-blur-sm">
-                    {/* top color bar */}
-                    <div className={`h-1 w-full ${science.theme.nav}`} />
-                    <div className="p-5">
-                      <div className="flex items-start gap-3 mb-3">
-                        <div className={`flex-shrink-0 w-11 h-11 rounded-xl ${science.theme.badge} ${science.theme.badgeText} flex items-center justify-center text-xl shadow-sm`}>
-                          {science.icon}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-white text-sm leading-tight group-hover:text-amber-400 transition-colors mb-0.5">
-                            {science.name}
-                          </h3>
-                          <p className="text-stone-500 text-[11px] truncate">{science.originalName}</p>
-                        </div>
-                      </div>
-
-                      <p className="text-amber-400/70 text-xs font-semibold italic mb-2 leading-tight">
-                        &ldquo;{science.tagline}&rdquo;
-                      </p>
-
-                      {/* Reveals preview */}
-                      <div className="space-y-1 mb-4">
-                        {science.whatItReveals.slice(0, 3).map((reveal, i) => (
-                          <div key={i} className="flex items-start gap-1.5">
-                            <span className="text-amber-500 text-xs mt-0.5 flex-shrink-0">✦</span>
-                            <p className="text-stone-400 text-[11px] leading-relaxed line-clamp-1">{reveal}</p>
-                          </div>
-                        ))}
-                        {science.whatItReveals.length > 3 && (
-                          <p className="text-stone-600 text-[11px] pl-4">+{science.whatItReveals.length - 3} more insights →</p>
-                        )}
-                      </div>
-
-                      <div className="flex items-center justify-between pt-3 border-t border-stone-700/40">
-                        <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${catMeta?.color ?? "bg-stone-700 text-stone-300"}`}>
-                          {catMeta?.label ?? science.category}
-                        </span>
-                        <span className="text-sm font-bold text-amber-400">from ${minPrice}</span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              )
-            })}
-          </ScrollReveal>
         </div>
       </section>
 
