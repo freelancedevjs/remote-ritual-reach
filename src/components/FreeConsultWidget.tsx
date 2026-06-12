@@ -111,7 +111,7 @@ export default function FreeConsultWidget({
               type="text"
               value={form.name}
               onChange={e => update("name", e.target.value)}
-              placeholder="e.g. Priya Sharma"
+              placeholder="e.g. Sarah Mitchell"
               className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20 transition-all"
             />
           </div>
