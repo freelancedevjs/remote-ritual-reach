@@ -220,19 +220,21 @@ export default function HomeContent() {
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center py-24">
           <p className="text-amber-400/70 text-xs font-semibold tracking-[0.4em] uppercase mb-6 animate-fade-in-down" style={{ animationDelay: "0.1s" }}>
-            ✦ Ancient Vedic Energy Science ✦
+            ✦ Verified Priests · Sacred Temples · Real Results ✦
           </p>
 
-          <h1 className="font-display font-bold leading-[1.08] mb-5 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-            <span className="block text-4xl sm:text-5xl md:text-6xl text-stone-300 mb-2">Ever feel like you&apos;re</span>
-            <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-shimmer">fighting an invisible wall?</span>
+          <h1 className="font-display font-bold leading-[1.08] mb-6 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+            <span className="block text-3xl sm:text-4xl md:text-5xl text-stone-400 mb-3 font-semibold tracking-wide">
+              Negative energy. Karmic blocks. Evil eye. Ancestral trauma.
+            </span>
+            <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-shimmer">Remove It at the Source.</span>
           </h1>
 
           <p className="text-stone-400 text-base md:text-lg max-w-2xl mx-auto mb-4 leading-relaxed animate-fade-in-up" style={{ animationDelay: "0.35s" }}>
-            The same patterns repeating. Hard work that stops working. Unexplained exhaustion.
+            Ancient Vedic rituals performed on your behalf at India&apos;s holiest temples.
           </p>
           <p className="text-amber-400/80 text-base md:text-lg max-w-xl mx-auto mb-10 font-medium animate-fade-in-up" style={{ animationDelay: "0.42s" }}>
-            This isn&apos;t bad luck. It&apos;s an energetic block — and it has a 5,000-year-old solution.
+            Verified priests. Every ritual documented on video. 12,000+ families served.
           </p>
 
           {/* Search */}

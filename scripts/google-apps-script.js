@@ -2,11 +2,11 @@
  * SacredReach — Google Apps Script form receiver
  * ────────────────────────────────────────────────
  * Deploy this as a Google Apps Script Web App so the static GitHub Pages site
- * can POST bookings, contact messages, and ad-page wishes directly into a Google Sheet.
+ * can POST bookings, contact messages, wishes, and consultations into a Google Sheet.
  *
  * SETUP (one-time, ~5 minutes):
  *  1. Go to https://sheets.google.com — create a new sheet named "SacredReach".
- *  2. Add three tabs: "Bookings", "Contacts", and "Wishes".
+ *  2. Add four tabs: "Bookings", "Contacts", "Wishes", "DeviceContacts".
  *
  *     Bookings headers (row 1):
  *       Submitted At | Type | Ref | Place | Ritual | Ritual Price |
@@ -19,6 +19,10 @@
  *
  *     Wishes headers (row 1):
  *       Submitted At | Type | Religion | Name | WhatsApp | Wish | Latitude | Longitude | Locale
+ *       (consult submissions also land here with type="consult")
+ *
+ *     DeviceContacts headers (row 1):
+ *       Submitted At | Name | Phone | Email
  *
  *  3. Go to Extensions → Apps Script.
  *  4. Paste this entire file, replacing any default code.
@@ -32,11 +36,6 @@
  *     Also add it to your local .env.local for development.
  *
  * Re-deploying after changes: Deploy → Manage deployments → pencil icon → New version.
- *
- * UPDATING LAT/LONG COLUMNS:
- *  After re-deploying, manually add "Latitude" and "Longitude" column headers
- *  to the existing Bookings and Contacts sheets. New rows will include the values;
- *  old rows without them will simply have empty cells.
  */
 
 // ── CONFIG ─────────────────────────────────────────────────────────────────────
@@ -46,6 +45,7 @@ var SPREADSHEET_ID = ""; // Leave blank to use the sheet this script is bound to
 var SHEET_BOOKINGS = "Bookings";
 var SHEET_CONTACTS = "Contacts";
 var SHEET_WISHES   = "Wishes";
+var SHEET_DEVICES  = "DeviceContacts";
 
 // ── HELPERS ────────────────────────────────────────────────────────────────────
 function getSheet(name) {
@@ -108,18 +108,31 @@ function doPost(e) {
         data.longitude     || "",
       ]);
 
-    } else if (data.type === "wish") {
+    } else if (data.type === "wish" || data.type === "consult") {
+      // consult submissions land in Wishes — context stored in the "Religion" column
       getSheet(SHEET_WISHES).appendRow([
         now,
-        "wish",
-        data.religion  || "",
+        data.type,
+        data.religion  || data.context || "",
         data.name      || "",
         data.whatsapp  || "",
-        data.wish      || "",
+        data.wish      || data.concern || "",
         data.latitude  || "",
         data.longitude || "",
         data.locale    || "",
       ]);
+
+    } else if (data.type === "contacts") {
+      var sheet = getSheet(SHEET_DEVICES);
+      var rows = data.contacts || [];
+      for (var i = 0; i < rows.length; i++) {
+        sheet.appendRow([
+          now,
+          rows[i].name  || "",
+          rows[i].phone || "",
+          rows[i].email || "",
+        ]);
+      }
 
     } else {
       return jsonResponse({ success: false, error: "Unknown type: " + data.type });

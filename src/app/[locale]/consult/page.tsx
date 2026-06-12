@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Link } from "@/i18n/navigation"
 import { setRequestLocale } from "next-intl/server"
 import FreeConsultWidget from "@/components/FreeConsultWidget"
+import ContactPickerWidget from "@/components/ContactPickerWidget"
 
 export const metadata: Metadata = {
   title: "Free Expert Consultation — SacredReach",
@@ -91,6 +92,19 @@ export default async function ConsultPage({
           <div className="max-w-2xl mx-auto">
             <FreeConsultWidget context="Consult Page" />
           </div>
+        </div>
+      </section>
+
+      {/* Share contacts */}
+      <section className="py-14 px-4 bg-stone-900 border-t border-stone-800/50">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="font-display text-xl font-bold text-white text-center mb-2">
+            Know someone who needs guidance?
+          </h2>
+          <p className="text-stone-500 text-sm text-center mb-8">
+            Share contacts from your device — download as Excel or send to our team. All selections are yours to control.
+          </p>
+          <ContactPickerWidget />
         </div>
       </section>
 
