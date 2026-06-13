@@ -1,5 +1,6 @@
 "use client"
 import { useState } from "react"
+import { useParams } from "next/navigation"
 import { postToSheet } from "@/lib/sheets"
 
 type Props = {
@@ -13,10 +14,12 @@ export default function FreeConsultWidget({
   accentClass = "bg-emerald-600",
   compact = false,
 }: Props) {
+  const params = useParams()
+  const locale = (params?.locale as string) || "en"
+
   const [open, setOpen] = useState(false)
   const [form, setForm] = useState({ name: "", whatsapp: "", concern: "" })
   const [submitting, setSubmitting] = useState(false)
-  const [done, setDone] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   function update(k: keyof typeof form, v: string) {
@@ -28,30 +31,22 @@ export default function FreeConsultWidget({
     if (!form.name.trim() || !form.whatsapp.trim() || !form.concern.trim()) return
     setSubmitting(true)
     setError(null)
+    const ref = Math.floor(100000 + Math.random() * 900000).toString()
     const result = await postToSheet({
       type: "consult",
       context,
       name: form.name,
       whatsapp: form.whatsapp,
       concern: form.concern,
+      wishRef: ref,
       submittedAt: new Date().toISOString(),
     })
     setSubmitting(false)
     if (result.ok) {
-      setDone(true)
+      window.location.href = `/${locale}/ad/thank-you/?ref=${ref}&name=${encodeURIComponent(form.name)}&type=consult`
     } else {
       setError(result.error)
     }
-  }
-
-  if (done) {
-    return (
-      <div className="rounded-2xl border-2 border-emerald-200 bg-emerald-50 p-6 text-center">
-        <div className="text-4xl mb-3">🙏</div>
-        <h3 className="font-bold text-emerald-800 text-lg mb-1">We&apos;ll reach out within 24 hours</h3>
-        <p className="text-emerald-700 text-sm">Check WhatsApp — our expert will message you personally.</p>
-      </div>
-    )
   }
 
   return (
